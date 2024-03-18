@@ -5,7 +5,7 @@ namespace Greenfield.Infrastructure.Persistence;
 
 public static class StartupExtensions
 {
-    public static IHostApplicationBuilder AddEfCoreContext(this IHostApplicationBuilder builder)
+    public static IHostApplicationBuilder ConfigureEntityFramework(this IHostApplicationBuilder builder)
     {
         builder.Services.AddDbContext<DatabaseContext>(
             options =>
@@ -27,12 +27,9 @@ public static class StartupExtensions
 
                 var connectionString = builder.Configuration.GetConnectionString("Npgsql");
 
-                options.UseNpgsql(connectionString, configuration =>
-                {
-                    configuration.EnableRetryOnFailure(3);
-                });
+                options.UseNpgsql(connectionString, configuration => { configuration.EnableRetryOnFailure(3); });
             });
-        
+
         return builder;
     }
 }

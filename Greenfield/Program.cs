@@ -1,5 +1,6 @@
 using Greenfield.Infrastructure;
 using Greenfield.Infrastructure.Logging;
+using Greenfield.Infrastructure.Persistence;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -11,6 +12,7 @@ try
     var builder = WebApplication.CreateBuilder(args);
 
     builder.Host.ConfigureSerilog();
+    builder.ConfigureEntityFramework();
 
     builder.Services.AddApplicationServices();
 

@@ -15,17 +15,11 @@ internal sealed class IArchivableInterceptor : SaveChangesInterceptor
         InterceptionResult<int> result,
         CancellationToken cancellationToken = new())
     {
-        if (eventData.Context is null)
-        {
-            return ValueTask.FromResult(result);
-        }
-        
+        if (eventData.Context is null) return ValueTask.FromResult(result);
+
         foreach (var entry in eventData.Context.ChangeTracker.Entries())
         {
-            if (entry.Entity is not IArchivable archivableEntity || entry.State != EntityState.Deleted)
-            {
-                continue;
-            }
+            if (entry.Entity is not IArchivable archivableEntity || entry.State != EntityState.Deleted) continue;
 
             entry.State = EntityState.Modified;
             archivableEntity.ArchivedOnUtc = DateTime.UtcNow;
