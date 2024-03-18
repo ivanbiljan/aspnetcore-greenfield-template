@@ -24,7 +24,10 @@ public sealed class DisableMultipleQueuedItemsAttribute : JobFilterAttribute, IS
 
     public void OnPerforming(PerformingContext filterContext)
     {
-        if (TryAddFingerprintIfNotExists(filterContext.Connection, filterContext.BackgroundJob.Job)) return;
+        if (TryAddFingerprintIfNotExists(filterContext.Connection, filterContext.BackgroundJob.Job))
+        {
+            return;
+        }
 
         filterContext.Canceled = true;
     }
@@ -49,7 +52,10 @@ public sealed class DisableMultipleQueuedItemsAttribute : JobFilterAttribute, IS
 
     private static string GetFingerprint(Job job)
     {
-        if (job.Type is null || job.Method is null) return string.Empty;
+        if (job.Type is null || job.Method is null)
+        {
+            return string.Empty;
+        }
 
         var parameters = job.Args.Count == 0 ? string.Empty : string.Join(".", job.Args);
 
@@ -103,7 +109,9 @@ public sealed class DisableMultipleQueuedItemsAttribute : JobFilterAttribute, IS
                     DateTimeStyles.RoundtripKind,
                     out var timestamp) &&
                 DateTimeOffset.UtcNow <= timestamp.Add(FingerprintTimeout))
+            {
                 return false;
+            }
 
             connection.SetRangeInHash(
                 key,

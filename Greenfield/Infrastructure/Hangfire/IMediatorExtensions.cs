@@ -64,7 +64,7 @@ public static class IMediatorExtensions
     /// <param name="request">The request.</param>
     /// <param name="queue">The <see cref="HangfireQueue" /></param>
     /// <param name="enqueueAt">The <see cref="DateTime" /> when the job will be enqueued.</param>
-    /// <typeparam name="TResponse">The type of response, as indicated by <paramref name="request"/>.</typeparam>
+    /// <typeparam name="TResponse">The type of response, as indicated by <paramref name="request" />.</typeparam>
     public static void Enqueue<TResponse>(
         this IMediator mediator,
         string displayName,
