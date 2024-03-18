@@ -1,3 +1,5 @@
+using Greenfield.Infrastructure;
+using Greenfield.Infrastructure.Logging;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -7,6 +9,10 @@ Log.Logger = new LoggerConfiguration()
 try
 {
     var builder = WebApplication.CreateBuilder(args);
+
+    builder.Host.ConfigureSerilog();
+    
+    builder.Services.AddApplicationServices();
 
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
