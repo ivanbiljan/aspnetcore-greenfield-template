@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Greenfield.Infrastructure.Behaviors;
 
-internal sealed partial class LoggingBehavior<TRequest, TResponse>(
+internal sealed class LoggingBehavior<TRequest, TResponse>(
     IHttpContextAccessor httpContextAccessor,
     ILogger<LoggingBehavior<TRequest, TResponse>> logger
 ) : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
@@ -23,7 +23,7 @@ internal sealed partial class LoggingBehavior<TRequest, TResponse>(
         {
             additionalLogProperties["RequestMethod"] = httpContext.Request.Method;
             additionalLogProperties["RequestPath"] = httpContext.Request.Path.ToString();
-            
+
             additionalLogProperties["User"] = httpContext.User.Identity?.Name;
             additionalLogProperties["RemoteIP"] = httpContext.Connection.RemoteIpAddress;
         }

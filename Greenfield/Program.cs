@@ -11,7 +11,7 @@ try
     var builder = WebApplication.CreateBuilder(args);
 
     builder.Host.ConfigureSerilog();
-    
+
     builder.Services.AddApplicationServices();
 
     builder.Services.AddEndpointsApiExplorer();
