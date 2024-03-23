@@ -32,6 +32,7 @@ public static class StartupExtensions
 
                 hangfireConfiguration.UseConsole();
 
+                hangfireConfiguration.UseFilter(new AutomaticRetryAttribute {Attempts = 1});
                 hangfireConfiguration.UseFilter(new SerilogJobIdEnricher());
             }
         );
