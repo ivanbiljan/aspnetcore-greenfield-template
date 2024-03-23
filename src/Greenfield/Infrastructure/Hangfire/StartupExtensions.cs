@@ -1,4 +1,5 @@
-﻿using Hangfire;
+﻿using Greenfield.Infrastructure.Hangfire.Filters;
+using Hangfire;
 using Hangfire.Console;
 using Hangfire.PostgreSql;
 using Newtonsoft.Json;
@@ -29,6 +30,8 @@ public static class StartupExtensions
                     {
                         PrepareSchemaIfNecessary = true
                     });
+
+                hangfireConfiguration.UseFilter(new SerilogJobIdEnricher());
             });
 
         return builder;
