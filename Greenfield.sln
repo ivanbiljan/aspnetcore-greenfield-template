@@ -6,6 +6,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{983A1AFA-359
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0C5408BD-90AF-4276-968A-7EE6D2BCB4C6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HangfireWorker", "src\HangfireWorker\HangfireWorker.csproj", "{1C2EE17A-5794-4394-BD4E-5F4F30505F64}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -16,8 +18,13 @@ Global
 		{73B068F2-E7FF-49AA-B202-011B2544D98F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73B068F2-E7FF-49AA-B202-011B2544D98F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73B068F2-E7FF-49AA-B202-011B2544D98F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C2EE17A-5794-4394-BD4E-5F4F30505F64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C2EE17A-5794-4394-BD4E-5F4F30505F64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C2EE17A-5794-4394-BD4E-5F4F30505F64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C2EE17A-5794-4394-BD4E-5F4F30505F64}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{73B068F2-E7FF-49AA-B202-011B2544D98F} = {983A1AFA-3591-478D-87D5-0DBE3F226809}
+		{1C2EE17A-5794-4394-BD4E-5F4F30505F64} = {983A1AFA-3591-478D-87D5-0DBE3F226809}
 	EndGlobalSection
 EndGlobal

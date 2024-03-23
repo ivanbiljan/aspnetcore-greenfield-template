@@ -27,6 +27,15 @@ public sealed record HangfireQueue
         _queueName = queueName;
     }
 
+    /// <summary>
+    ///     Returns a read-only collection of available queues.
+    /// </summary>
+    /// <returns>An <see cref="IReadOnlyList{T}" /> of queues.</returns>
+    public static string[] GetAll()
+    {
+        return [CriticalPriority.ToString(), Default.ToString(), LowPriority.ToString()];
+    }
+
     /// <inheritdoc />
     public override string ToString()
     {

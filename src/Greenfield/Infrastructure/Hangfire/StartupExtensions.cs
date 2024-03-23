@@ -22,17 +22,19 @@ public static class StartupExtensions
 
                 hangfireConfiguration.SetDataCompatibilityLevel(CompatibilityLevel.Version_170);
                 hangfireConfiguration.UseSimpleAssemblyNameTypeSerializer();
-                hangfireConfiguration.UseRecommendedSerializerSettings();
-                hangfireConfiguration.UseConsole();
                 hangfireConfiguration.UsePostgreSqlStorage(
                     options => options.UseNpgsqlConnection(builder.Configuration.GetConnectionString("Hangfire")),
                     new PostgreSqlStorageOptions
                     {
                         PrepareSchemaIfNecessary = true
-                    });
+                    }
+                );
+
+                hangfireConfiguration.UseConsole();
 
                 hangfireConfiguration.UseFilter(new SerilogJobIdEnricher());
-            });
+            }
+        );
 
         return builder;
     }

@@ -13,7 +13,8 @@ internal sealed class IArchivableInterceptor : SaveChangesInterceptor
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
         InterceptionResult<int> result,
-        CancellationToken cancellationToken = new())
+        CancellationToken cancellationToken = new()
+    )
     {
         if (eventData.Context is null)
         {

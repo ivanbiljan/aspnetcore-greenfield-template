@@ -11,7 +11,8 @@ internal sealed class LoggingBehavior<TRequest, TResponse>(
     public async Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
         var additionalLogProperties = new Dictionary<string, object?>
         {
@@ -42,7 +43,8 @@ internal sealed class LoggingBehavior<TRequest, TResponse>(
                 logger.LogInformation(
                     "{Handler} executed in {ElapsedTime} ms",
                     handlerName,
-                    stopwatch.Elapsed.TotalMilliseconds);
+                    stopwatch.Elapsed.TotalMilliseconds
+                );
 
                 return response;
             }

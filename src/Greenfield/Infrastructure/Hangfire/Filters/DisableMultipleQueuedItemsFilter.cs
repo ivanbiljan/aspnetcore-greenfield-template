@@ -90,7 +90,8 @@ public sealed class DisableMultipleQueuedItemsAttribute : JobFilterAttribute, IS
         return TryAddFingerprintIfNotExists(
             connection,
             GetFingerprintKey(job),
-            GetFingerprint(job));
+            GetFingerprint(job)
+        );
     }
 
     private static bool TryAddFingerprintIfNotExists(IStorageConnection connection, string key, string jobData)
@@ -107,7 +108,8 @@ public sealed class DisableMultipleQueuedItemsAttribute : JobFilterAttribute, IS
                     value[..fingerprint[MetadataKey].IndexOf(' ')],
                     null,
                     DateTimeStyles.RoundtripKind,
-                    out var timestamp) &&
+                    out var timestamp
+                ) &&
                 DateTimeOffset.UtcNow <= timestamp.Add(FingerprintTimeout))
             {
                 return false;
@@ -118,7 +120,8 @@ public sealed class DisableMultipleQueuedItemsAttribute : JobFilterAttribute, IS
                 new Dictionary<string, string>
                 {
                     [MetadataKey] = $"{DateTimeOffset.UtcNow:o} {jobData}"
-                });
+                }
+            );
 
             return true;
         }

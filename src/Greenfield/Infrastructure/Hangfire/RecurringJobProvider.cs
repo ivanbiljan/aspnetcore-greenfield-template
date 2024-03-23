@@ -34,13 +34,15 @@ public static class RecurringJobProvider
         {
             var job = (IRecurringJob) ActivatorUtilities.CreateInstance(
                 serviceProvider.CreateScope().ServiceProvider,
-                jobHandler);
+                jobHandler
+            );
 
             // Provide null for the PerformContext and Hangfire fills it with the correct context when executing it
             recurringJobManager.AddOrUpdate(
                 job.JobId,
-                Job.FromExpression(() => job.ExecuteAsync(null)),
-                job.Cron);
+                Job.FromExpression(() => job.ExecuteAsync(null!)),
+                job.Cron
+            );
         }
     }
 }

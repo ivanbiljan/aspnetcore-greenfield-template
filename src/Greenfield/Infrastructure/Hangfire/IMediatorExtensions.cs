@@ -38,14 +38,16 @@ public static class IMediatorExtensions
         string displayName,
         IRequest request,
         HangfireQueue? queue = null,
-        DateTime? enqueueAt = null)
+        DateTime? enqueueAt = null
+    )
     {
         var backgroundJobClient = new BackgroundJobClient();
         if (enqueueAt is not null)
         {
             backgroundJobClient.Schedule<MediatorWrapper>(
                 wrapper => wrapper.Send(displayName, request),
-                enqueueAt.Value - DateTime.UtcNow);
+                enqueueAt.Value - DateTime.UtcNow
+            );
 
             return;
         }
@@ -53,7 +55,8 @@ public static class IMediatorExtensions
         queue ??= HangfireQueue.Default;
         backgroundJobClient.Create<MediatorWrapper>(
             wrapper => wrapper.Send(displayName, request),
-            new EnqueuedState(queue.ToString()));
+            new EnqueuedState(queue.ToString())
+        );
     }
 
     /// <summary>
@@ -70,20 +73,23 @@ public static class IMediatorExtensions
         string displayName,
         IRequest<TResponse> request,
         HangfireQueue? queue = null,
-        DateTime? enqueueAt = null)
+        DateTime? enqueueAt = null
+    )
     {
         var backgroundJobClient = new BackgroundJobClient();
         if (enqueueAt is not null)
         {
             backgroundJobClient.Schedule<MediatorWrapper>(
                 wrapper => wrapper.Send(displayName, request),
-                enqueueAt.Value - DateTime.UtcNow);
+                enqueueAt.Value - DateTime.UtcNow
+            );
 
             return;
         }
 
         backgroundJobClient.Create<MediatorWrapper>(
             wrapper => wrapper.Send(displayName, request),
-            new EnqueuedState(queue.ToString()));
+            new EnqueuedState(queue.ToString())
+        );
     }
 }

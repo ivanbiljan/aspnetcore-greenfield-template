@@ -21,14 +21,17 @@ public static class StartupExtensions
                                 CoreEventId.FirstWithoutOrderByAndFilterWarning,
                                 CoreEventId.RowLimitingOperationWithoutOrderByWarning,
                                 CoreEventId.StartedTracking,
-                                CoreEventId.SaveChangesStarting);
-                        });
+                                CoreEventId.SaveChangesStarting
+                            );
+                        }
+                    );
                 }
 
                 var connectionString = builder.Configuration.GetConnectionString("Npgsql");
 
                 options.UseNpgsql(connectionString, configuration => { configuration.EnableRetryOnFailure(3); });
-            });
+            }
+        );
 
         return builder;
     }

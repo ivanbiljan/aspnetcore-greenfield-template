@@ -11,9 +11,8 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    builder.Host.ConfigureSerilog();
     builder.ConfigureEntityFramework();
-
+    builder.Services.ConfigureSerilog("Api");
     builder.Services.AddApplicationServices();
 
     builder.Services.AddEndpointsApiExplorer();
@@ -28,6 +27,7 @@ try
     }
 
     app.UseHttpsRedirection();
+    app.UseSerilogHttpLogging();
 
     app.Run();
 }
