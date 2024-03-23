@@ -8,7 +8,7 @@ public sealed record HangfireQueue
     /// <summary>
     ///     Gets the priority queue. Jobs placed in this queue are processed first.
     /// </summary>
-    public static readonly HangfireQueue Critical = new("critical");
+    public static readonly HangfireQueue CriticalPriority = new("critical");
 
     /// <summary>
     ///     Gets the default queue.
