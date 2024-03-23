@@ -1,4 +1,5 @@
 using Greenfield.Infrastructure;
+using Greenfield.Infrastructure.Hangfire;
 using Greenfield.Infrastructure.Logging;
 using Greenfield.Infrastructure.Persistence;
 using Serilog;
@@ -12,6 +13,7 @@ try
     var builder = WebApplication.CreateBuilder(args);
 
     builder.ConfigureEntityFramework();
+    builder.AddHangfireInternal();
     builder.Services.ConfigureSerilog("Api");
     builder.Services.AddApplicationServices();
 
