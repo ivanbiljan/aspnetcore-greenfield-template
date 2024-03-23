@@ -41,7 +41,7 @@ internal sealed class LoggingBehavior<TRequest, TResponse>(
                 stopwatch.Stop();
 
                 logger.LogInformation(
-                    "{Handler} executed in {ElapsedTime} ms",
+                    "{@Handler} executed in {@ElapsedTime} ms",
                     handlerName,
                     stopwatch.Elapsed.TotalMilliseconds
                 );
@@ -53,7 +53,7 @@ internal sealed class LoggingBehavior<TRequest, TResponse>(
         {
             using (logger.BeginScope(additionalLogProperties))
             {
-                logger.LogError(ex, "{Handler} returned an exception", handlerName);
+                logger.LogError(ex, "{@Handler} returned an exception", handlerName);
             }
 
             throw;
