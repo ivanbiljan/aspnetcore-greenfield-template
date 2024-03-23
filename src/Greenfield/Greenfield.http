@@ -1,6 +1,0 @@
-@Greenfield_HostAddress = http://localhost:5008
-
-GET {{Greenfield_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
