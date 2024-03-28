@@ -32,31 +32,27 @@ internal sealed class LoggingBehavior<TRequest, TResponse>(
         var requestType = typeof(TRequest);
         var handlerName = requestType.DeclaringType?.FullName ?? requestType.FullName!;
 
-        try
+        using (logger.BeginScope(additionalLogProperties))
         {
-            using (logger.BeginScope(additionalLogProperties))
+            try
             {
                 var stopwatch = Stopwatch.StartNew();
                 var response = await next();
                 stopwatch.Stop();
 
                 logger.LogInformation(
-                    "{@Handler} executed in {@ElapsedTime} ms",
+                    "{Handler} executed in {ElapsedTime:000} ms",
                     handlerName,
                     stopwatch.Elapsed.TotalMilliseconds
                 );
 
                 return response;
             }
-        }
-        catch (Exception ex)
-        {
-            using (logger.BeginScope(additionalLogProperties))
+            catch (Exception ex)
             {
-                logger.LogError(ex, "{@Handler} returned an exception", handlerName);
+                logger.LogError(ex, "{Handler} returned an exception", handlerName);
+                throw;
             }
-
-            throw;
         }
     }
 }

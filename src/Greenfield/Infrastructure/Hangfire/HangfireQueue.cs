@@ -28,9 +28,9 @@ public sealed record HangfireQueue
     }
 
     /// <summary>
-    ///     Returns a read-only collection of available queues.
+    ///     Returns a collection of available queues.
     /// </summary>
-    /// <returns>An <see cref="IReadOnlyList{T}" /> of queues.</returns>
+    /// <returns>An array of queues.</returns>
     public static string[] GetAll()
     {
         return [CriticalPriority.ToString(), Default.ToString(), LowPriority.ToString()];
