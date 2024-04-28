@@ -21,7 +21,7 @@ public sealed class SerilogHttpLoggingFilter(ILogger serilogLogger, IOptions<Ser
 {
     private const string RequestStartTimestampHttpItem = "RequestStartTimestamp";
 
-    private const string SuccessMessageTemplate =
+    private const string DefaultMessageTemplate =
         "HTTP {Method} '{Path}' responded with {StatusCode} in {ElapsedMs:00}";
 
     private const string ExceptionMessageTemplate = "HTTP {Method} '{Path}' threw an exception";
@@ -157,7 +157,7 @@ public sealed class SerilogHttpLoggingFilter(ILogger serilogLogger, IOptions<Ser
         var logLevel = context.Response.StatusCode >= 500 ? LogEventLevel.Error : LogEventLevel.Information;
         _logger.Write(
             logLevel,
-            SuccessMessageTemplate,
+            DefaultMessageTemplate,
             context.Request.Method,
             context.Request.Path,
             context.Response.StatusCode,
