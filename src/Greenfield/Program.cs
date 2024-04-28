@@ -15,6 +15,7 @@ try
     builder.ConfigureEntityFramework();
     builder.AddHangfireInternal();
     builder.Services.ConfigureSerilog("Api");
+    builder.Services.AddSerilogHttpLogging();
     builder.Services.AddApplicationServices();
 
     builder.Services.AddEndpointsApiExplorer();
@@ -29,7 +30,6 @@ try
     }
 
     app.UseHttpsRedirection();
-    app.UseSerilogHttpLogging();
 
     app.Run();
 }

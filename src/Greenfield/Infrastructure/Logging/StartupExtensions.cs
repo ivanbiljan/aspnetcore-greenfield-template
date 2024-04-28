@@ -44,24 +44,4 @@ public static class StartupExtensions
             }
         );
     }
-
-    /// <summary>
-    ///     Adds Serilog's HTTP request logging middleware to the pipeline. Enriches requests with the user's identity and
-    ///     RemoteIpAddress. Request and response bodies are not logged.
-    /// </summary>
-    /// <param name="app">The <see cref="IApplicationBuilder" />.</param>
-    /// <returns>The modified <paramref name="app" />.</returns>
-    public static IApplicationBuilder UseSerilogHttpLogging(this IApplicationBuilder app)
-    {
-        return app.UseSerilogRequestLogging(
-            options =>
-            {
-                options.EnrichDiagnosticContext = static (diagnosticContext, httpContext) =>
-                {
-                    diagnosticContext.Set("User", httpContext.User.Identity?.Name);
-                    diagnosticContext.Set("RemoteIP", httpContext.Connection.RemoteIpAddress);
-                };
-            }
-        );
-    }
 }
