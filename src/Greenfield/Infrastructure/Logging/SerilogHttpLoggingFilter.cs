@@ -32,6 +32,11 @@ public sealed class SerilogHttpLoggingFilter(ILogger serilogLogger, IOptions<Ser
     /// <inheritdoc />
     public void OnActionExecuting(ActionExecutingContext context)
     {
+        if (!_logger.IsEnabled(LogEventLevel.Information))
+        {
+            return;
+        }
+        
         context.HttpContext.Items[RequestStartTimestampHttpItem] = DateTime.UtcNow;
 
         _logger = PopulateRequestContext(context.HttpContext);
@@ -48,6 +53,11 @@ public sealed class SerilogHttpLoggingFilter(ILogger serilogLogger, IOptions<Ser
     /// <inheritdoc />
     public void OnActionExecuted(ActionExecutedContext context)
     {
+        if (!_logger.IsEnabled(LogEventLevel.Information))
+        {
+            return;
+        }
+        
         var requestStartTimestamp = (DateTime) context.HttpContext.Items[RequestStartTimestampHttpItem];
         var elapsedMs = (DateTime.UtcNow - requestStartTimestamp).TotalMilliseconds;
 
@@ -57,6 +67,11 @@ public sealed class SerilogHttpLoggingFilter(ILogger serilogLogger, IOptions<Ser
     /// <inheritdoc />
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {
+        if (!_logger.IsEnabled(LogEventLevel.Information))
+        {
+            return await next(context);
+        }
+        
         var request = context.HttpContext.Request;
         _logger = PopulateRequestContext(context.HttpContext);
 
