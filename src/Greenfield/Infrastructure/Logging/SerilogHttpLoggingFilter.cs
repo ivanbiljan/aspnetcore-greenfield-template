@@ -80,8 +80,7 @@ public sealed class SerilogHttpLoggingFilter(ILogger serilogLogger, IOptions<Ser
             _contextualLogger = _contextualLogger.ForContext("RequestArgs", context.Arguments, true);
         }
 
-        var stopwatch = new Stopwatch();
-        stopwatch.Start();
+        var stopwatch = Stopwatch.StartNew();
 
         try
         {
@@ -127,6 +126,11 @@ public sealed class SerilogHttpLoggingFilter(ILogger serilogLogger, IOptions<Ser
             .ForContext("Path", request.Path)
             .ForContext("User", context.User.Identity?.Name)
             .ForContext("RemoteIP", context.Connection.RemoteIpAddress);
+
+        if (_loggingOptions.LoggingFields.HasFlag(SerilogHttpLoggingFields.QueryString))
+        {
+            _contextualLogger = _contextualLogger.ForContext("QueryString", request.QueryString);
+        }
 
         if (_loggingOptions.LoggingFields.HasFlag(SerilogHttpLoggingFields.RequestHeaders))
         {

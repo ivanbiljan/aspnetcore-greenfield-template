@@ -9,6 +9,12 @@ namespace Greenfield.Infrastructure.Logging;
 public enum SerilogHttpLoggingFields
 {
     /// <summary>
+    ///     Flag for logging the query string. Query strings may include sensitive data that is subject to regulations such as
+    ///     GDPR or CPPA.
+    /// </summary>
+    QueryString = 1 << 0,
+
+    /// <summary>
     ///     <para>
     ///         Flag for logging the request headers.
     ///     </para>
@@ -18,12 +24,12 @@ public enum SerilogHttpLoggingFields
     ///         Authorization: ****
     ///     </para>
     /// </summary>
-    RequestHeaders = 1 << 0,
+    RequestHeaders = 1 << 1,
 
     /// <summary>
     ///     Flag for logging the request body. Properties annotated with Destructurama attributes are omitted.
     /// </summary>
-    RequestBody = 1 << 1,
+    RequestBody = 1 << 2,
 
     /// <summary>
     ///     <para>
@@ -35,17 +41,17 @@ public enum SerilogHttpLoggingFields
     ///         Authorization: ****
     ///     </para>
     /// </summary>
-    ResponseHeaders = 1 << 2,
+    ResponseHeaders = 1 << 3,
 
     /// <summary>
     ///     Flag for logging the response body. Properties annotated with Destructurama attributes are omitted.
     /// </summary>
-    ResponseBody = 1 << 3,
+    ResponseBody = 1 << 4,
 
     /// <summary>
-    ///     A shorthand flag for logging the <see cref="RequestHeaders" /> and <see cref="RequestBody" />.
+    ///     A shorthand flag for logging the <see cref="QueryString"/>, <see cref="RequestHeaders" /> and <see cref="RequestBody" />.
     /// </summary>
-    Request = RequestHeaders | RequestBody,
+    Request = QueryString | RequestHeaders | RequestBody,
 
     /// <summary>
     ///     A shorthand flag for logging the <see cref="ResponseHeaders" /> and
@@ -68,6 +74,7 @@ public sealed class SerilogHttpLoggingOptions
     ///     Gets or sets a bit vector that specifies which request/response properties are logged. Logs the path, request and
     ///     response headers by default.
     /// </summary>
+    /// <remarks>The request path is always logged.</remarks>
     public SerilogHttpLoggingFields LoggingFields { get; set; } = SerilogHttpLoggingFields.RequestHeaders |
                                                                   SerilogHttpLoggingFields.ResponseHeaders;
 
