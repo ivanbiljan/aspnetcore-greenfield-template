@@ -44,4 +44,30 @@ public static class StartupExtensions
             }
         );
     }
+    
+    /// <summary>
+    ///     Adds the <see cref="SerilogHttpLoggingFilter" /> globally.
+    /// </summary>
+    /// <param name="services">The <see cref="IServiceCollection" />.</param>
+    /// <param name="configure">The setup action used to configure the logging filter.</param>
+    /// <returns>The modified <see cref="IServiceCollection" /> to allow chaining.</returns>
+    public static IServiceCollection AddSerilogHttpLogging(
+        this IServiceCollection services,
+        Action<SerilogHttpLoggingOptions>? configure = null
+    )
+    {
+        ArgumentNullException.ThrowIfNull(services);
+
+        services.AddOptions();
+        if (configure is not null)
+        {
+            services.Configure(configure);
+        }
+
+        services.AddControllersWithViews(
+            options => { options.Filters.Add<SerilogHttpLoggingFilter>(); }
+        );
+
+        return services;
+    }
 }

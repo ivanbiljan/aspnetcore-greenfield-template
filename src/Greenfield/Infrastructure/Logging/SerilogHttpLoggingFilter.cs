@@ -14,7 +14,7 @@ namespace Greenfield.Infrastructure.Logging;
 /// <param name="serilogLogger">The logger used to log the request.</param>
 /// <param name="options">
 ///     The options that dictate which properties are logged. Configured through
-///     <see cref="IServiceCollectionExtensions.AddSerilogHttpLogging" />.
+///     <see cref="StartupExtensions.AddSerilogHttpLogging" />.
 /// </param>
 public sealed class SerilogHttpLoggingFilter(ILogger serilogLogger, IOptions<SerilogHttpLoggingOptions> options)
     : ExceptionFilterAttribute, IActionFilter, IEndpointFilter
@@ -27,25 +27,25 @@ public sealed class SerilogHttpLoggingFilter(ILogger serilogLogger, IOptions<Ser
     private const string ExceptionMessageTemplate = "HTTP {Method} '{Path}' threw an exception";
 
     private readonly SerilogHttpLoggingOptions _loggingOptions = options.Value;
-    private ILogger _logger = serilogLogger.ForContext<SerilogHttpLoggingFilter>();
+    private ILogger _contextualLogger = serilogLogger.ForContext<SerilogHttpLoggingFilter>();
 
     /// <inheritdoc />
     public void OnActionExecuting(ActionExecutingContext context)
     {
-        if (!_logger.IsEnabled(LogEventLevel.Information))
+        if (!_contextualLogger.IsEnabled(LogEventLevel.Information))
         {
             return;
         }
         
         context.HttpContext.Items[RequestStartTimestampHttpItem] = DateTime.UtcNow;
 
-        _logger = PopulateRequestContext(context.HttpContext);
+        _contextualLogger = PopulateRequestContext(context.HttpContext);
 
         if (_loggingOptions.LoggingFields.HasFlag(SerilogHttpLoggingFields.RequestBody))
         {
             foreach (var arg in context.ActionArguments)
             {
-                _logger = _logger.ForContext(arg.Key, arg.Value, true);
+                _contextualLogger = _contextualLogger.ForContext(arg.Key, arg.Value, true);
             }
         }
     }
@@ -53,7 +53,7 @@ public sealed class SerilogHttpLoggingFilter(ILogger serilogLogger, IOptions<Ser
     /// <inheritdoc />
     public void OnActionExecuted(ActionExecutedContext context)
     {
-        if (!_logger.IsEnabled(LogEventLevel.Information))
+        if (!_contextualLogger.IsEnabled(LogEventLevel.Information))
         {
             return;
         }
@@ -67,17 +67,17 @@ public sealed class SerilogHttpLoggingFilter(ILogger serilogLogger, IOptions<Ser
     /// <inheritdoc />
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {
-        if (!_logger.IsEnabled(LogEventLevel.Information))
+        if (!_contextualLogger.IsEnabled(LogEventLevel.Information))
         {
             return await next(context);
         }
         
         var request = context.HttpContext.Request;
-        _logger = PopulateRequestContext(context.HttpContext);
+        _contextualLogger = PopulateRequestContext(context.HttpContext);
 
         if (_loggingOptions.LoggingFields.HasFlag(SerilogHttpLoggingFields.RequestBody))
         {
-            _logger = _logger.ForContext("RequestArgs", context.Arguments, true);
+            _contextualLogger = _contextualLogger.ForContext("RequestArgs", context.Arguments, true);
         }
 
         var stopwatch = new Stopwatch();
@@ -95,7 +95,7 @@ public sealed class SerilogHttpLoggingFilter(ILogger serilogLogger, IOptions<Ser
         catch (Exception ex)
         {
             stopwatch.Stop();
-            _logger.ForContext("ElapsedMs", stopwatch.ElapsedMilliseconds)
+            _contextualLogger.ForContext("ElapsedMs", stopwatch.ElapsedMilliseconds)
                 .Error(ex, ExceptionMessageTemplate, request.Method, request.Path);
 
             throw;
@@ -107,7 +107,7 @@ public sealed class SerilogHttpLoggingFilter(ILogger serilogLogger, IOptions<Ser
         var requestStartTimestamp = (DateTime) context.HttpContext.Items[RequestStartTimestampHttpItem];
         var elapsedMs = (DateTime.UtcNow - requestStartTimestamp).TotalMilliseconds;
 
-        _logger.ForContext("ElapsedMs", elapsedMs)
+        _contextualLogger.ForContext("ElapsedMs", elapsedMs)
             .Error(
                 context.Exception,
                 ExceptionMessageTemplate,
@@ -121,7 +121,7 @@ public sealed class SerilogHttpLoggingFilter(ILogger serilogLogger, IOptions<Ser
     private ILogger PopulateRequestContext(HttpContext context)
     {
         var request = context.Request;
-        _logger = _logger.ForContext("Protocol", request.Protocol)
+        _contextualLogger = _contextualLogger.ForContext("Protocol", request.Protocol)
             .ForContext("Scheme", request.Scheme)
             .ForContext("Method", request.Method)
             .ForContext("Path", request.Path)
@@ -130,20 +130,20 @@ public sealed class SerilogHttpLoggingFilter(ILogger serilogLogger, IOptions<Ser
 
         if (_loggingOptions.LoggingFields.HasFlag(SerilogHttpLoggingFields.RequestHeaders))
         {
-            _logger = _logger.ForContext(
+            _contextualLogger = _contextualLogger.ForContext(
                 "RequestHeaders",
                 request.Headers.Where(h => _loggingOptions.RequestHeaders.Contains(h.Key))
             );
         }
 
-        return _logger;
+        return _contextualLogger;
     }
 
     private void WriteResponse(HttpContext context, object? result, double elapsedMs)
     {
         if (_loggingOptions.LoggingFields.HasFlag(SerilogHttpLoggingFields.ResponseHeaders))
         {
-            _logger = _logger.ForContext(
+            _contextualLogger = _contextualLogger.ForContext(
                 "ResponseHeaders",
                 context.Response.Headers.Where(h => _loggingOptions.ResponseHeaders.Contains(h.Key))
             );
@@ -151,11 +151,11 @@ public sealed class SerilogHttpLoggingFilter(ILogger serilogLogger, IOptions<Ser
 
         if (_loggingOptions.LoggingFields.HasFlag(SerilogHttpLoggingFields.ResponseBody))
         {
-            _logger = _logger.ForContext("ResponseBody", result, true);
+            _contextualLogger = _contextualLogger.ForContext("ResponseBody", result, true);
         }
 
         var logLevel = context.Response.StatusCode >= 500 ? LogEventLevel.Error : LogEventLevel.Information;
-        _logger.Write(
+        _contextualLogger.Write(
             logLevel,
             DefaultMessageTemplate,
             context.Request.Method,
@@ -163,35 +163,5 @@ public sealed class SerilogHttpLoggingFilter(ILogger serilogLogger, IOptions<Ser
             context.Response.StatusCode,
             elapsedMs
         );
-    }
-}
-
-public static class IServiceCollectionExtensions
-{
-    /// <summary>
-    ///     Adds the <see cref="SerilogHttpLoggingFilter" /> globally.
-    /// </summary>
-    /// <param name="services">The <see cref="IServiceCollection" />.</param>
-    /// <param name="configure">The setup action used to configure the logging filter.</param>
-    /// <returns>The modified <see cref="IServiceCollection" /> to allow chaining.</returns>
-    public static IServiceCollection AddSerilogHttpLogging(
-        this IServiceCollection services,
-        Action<SerilogHttpLoggingOptions>? configure = null
-    )
-    {
-        ArgumentNullException.ThrowIfNull(services);
-        ArgumentNullException.ThrowIfNull(configure);
-
-        services.AddOptions();
-        if (configure is not null)
-        {
-            services.Configure(configure);
-        }
-
-        services.AddControllersWithViews(
-            options => { options.Filters.Add<SerilogHttpLoggingFilter>(); }
-        );
-
-        return services;
     }
 }
