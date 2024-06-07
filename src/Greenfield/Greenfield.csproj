@@ -12,6 +12,7 @@
         <PackageReference Include="Hangfire" />
         <PackageReference Include="Hangfire.Console" />
         <PackageReference Include="Hangfire.PostgreSql" />
+        <PackageReference Include="Hellang.Middleware.ProblemDetails" />
         <PackageReference Include="MediatR" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" />

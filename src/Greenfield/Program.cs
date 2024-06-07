@@ -3,7 +3,10 @@ using Greenfield.Infrastructure;
 using Greenfield.Infrastructure.Hangfire;
 using Greenfield.Infrastructure.Logging;
 using Greenfield.Infrastructure.Persistence;
+using Hellang.Middleware.ProblemDetails;
+using Hellang.Middleware.ProblemDetails.Mvc;
 using Serilog;
+using ProblemDetailsMiddleware = Greenfield.Infrastructure.Web.ProblemDetailsMiddleware;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -18,6 +21,9 @@ try
     builder.Services.AddSerilogInternal("Api");
     builder.Services.ConfigureSerilogHttpLogging();
     builder.Services.AddApplicationServices();
+    
+    builder.Services.AddProblemDetails(ProblemDetailsMiddleware.ConfigureProblemDetails);
+    builder.Services.AddProblemDetailsConventions();
 
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
@@ -33,6 +39,7 @@ try
     }
 
     app.UseHttpsRedirection();
+    app.UseProblemDetails();
 
     app.Run();
 }
@@ -45,7 +52,6 @@ finally
     if (new StackTrace().FrameCount == 1)
     {
         Log.Information("Shutdown complete");
+        await Log.CloseAndFlushAsync();
     }
-    
-    Log.CloseAndFlush();
 }
