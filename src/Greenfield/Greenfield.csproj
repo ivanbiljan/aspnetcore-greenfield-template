@@ -8,22 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Destructurama.Attributed" Version="4.0.0"/>
-        <PackageReference Include="Hangfire" Version="1.8.11"/>
-        <PackageReference Include="Hangfire.Console" Version="1.4.3"/>
-        <PackageReference Include="Hangfire.PostgreSql" Version="1.20.8"/>
-        <PackageReference Include="MediatR" Version="12.2.0"/>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0-preview.2.24128.4"/>
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.0-preview.1"/>
-        <PackageReference Include="Serilog" Version="4.0.0-dev-02122"/>
-        <PackageReference Include="Serilog.AspNetCore" Version="8.0.2-dev-00334"/>
-        <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.0-dev-00806"/>
-        <PackageReference Include="Serilog.Exceptions.Refit" Version="8.4.0"/>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <Content Include="..\.dockerignore">
             <Link>.dockerignore</Link>
         </Content>
