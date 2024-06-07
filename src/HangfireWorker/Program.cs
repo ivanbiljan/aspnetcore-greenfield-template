@@ -7,8 +7,8 @@ using HangfireWorker;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-builder.ConfigureEntityFramework();
-builder.Services.ConfigureSerilog("HangfireWorker");
+builder.AddEntityFramework();
+builder.Services.AddSerilogInternal("HangfireWorker");
 builder.Services.AddApplicationServices();
 
 builder.AddHangfireInternal();

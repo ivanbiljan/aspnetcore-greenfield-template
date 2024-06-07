@@ -5,7 +5,7 @@ namespace Greenfield.Infrastructure.Persistence;
 
 public static class StartupExtensions
 {
-    public static IHostApplicationBuilder ConfigureEntityFramework(this IHostApplicationBuilder builder)
+    public static IHostApplicationBuilder AddEntityFramework(this IHostApplicationBuilder builder)
     {
         builder.Services.AddDbContext<DatabaseContext>(
             options =>

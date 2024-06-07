@@ -72,7 +72,7 @@ public static class StartupExtensions
     /// <param name="services">The <see cref="IServiceCollection" /> to configure.</param>
     /// <param name="projectName">The name of the project all logs will be enriched with.</param>
     /// <returns>The modified <paramref name="services" /> to allow chaining.</returns>
-    public static IServiceCollection ConfigureSerilog(this IServiceCollection services, string projectName)
+    public static IServiceCollection AddSerilogInternal(this IServiceCollection services, string projectName)
     {
         return services.AddSerilog(
             (_, loggerConfiguration) =>
@@ -107,7 +107,7 @@ public static class StartupExtensions
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection" />.</param>
     /// <returns>The modified <see cref="IServiceCollection" /> to allow chaining.</returns>
-    public static IServiceCollection AddSerilogHttpLogging(this IServiceCollection services)
+    public static IServiceCollection ConfigureSerilogHttpLogging(this IServiceCollection services)
     {
         services.Configure<RequestLoggingOptions>(
             options =>

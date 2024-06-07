@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Greenfield.Infrastructure;
 using Greenfield.Infrastructure.Hangfire;
 using Greenfield.Infrastructure.Logging;
@@ -12,10 +13,10 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    builder.ConfigureEntityFramework();
+    builder.AddEntityFramework();
     builder.AddHangfireInternal();
-    builder.Services.ConfigureSerilog("Api");
-    builder.Services.AddSerilogHttpLogging();
+    builder.Services.AddSerilogInternal("Api");
+    builder.Services.ConfigureSerilogHttpLogging();
     builder.Services.AddApplicationServices();
 
     builder.Services.AddEndpointsApiExplorer();
@@ -41,5 +42,10 @@ catch (Exception ex) when (ex is not HostAbortedException)
 }
 finally
 {
+    if (new StackTrace().FrameCount == 1)
+    {
+        Log.Information("Shutdown complete");
+    }
+    
     Log.CloseAndFlush();
 }
