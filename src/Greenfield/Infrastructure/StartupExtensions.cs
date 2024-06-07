@@ -13,6 +13,7 @@ public static class StartupExtensions
                 options.RegisterServicesFromAssemblyContaining<Program>();
 
                 options.AddBehavior(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+                options.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             }
         );
 
