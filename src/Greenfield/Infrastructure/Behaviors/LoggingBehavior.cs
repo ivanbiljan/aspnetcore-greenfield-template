@@ -40,6 +40,8 @@ internal sealed class LoggingBehavior<TRequest, TResponse>(
                 var response = await next();
                 stopwatch.Stop();
 
+                additionalLogProperties["Response"] = response;
+
                 logger.LogInformation(
                     "{Handler} executed in {ElapsedTime:000} ms",
                     handlerName,
@@ -51,6 +53,7 @@ internal sealed class LoggingBehavior<TRequest, TResponse>(
             catch (Exception ex)
             {
                 logger.LogError(ex, "{Handler} returned an exception", handlerName);
+
                 throw;
             }
         }

@@ -4,7 +4,7 @@ using Serilog.Events;
 
 namespace Greenfield.Infrastructure.Hangfire.Filters;
 
-internal sealed class SerilogJobIdEnricher : IServerFilter, ILogEventEnricher
+internal sealed class HangfireJobIdEnricher : IServerFilter, ILogEventEnricher
 {
     private static readonly AsyncLocal<string?> HangfireJobId = new();
 

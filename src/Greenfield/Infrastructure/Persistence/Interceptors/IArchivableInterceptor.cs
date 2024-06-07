@@ -7,6 +7,7 @@ namespace Greenfield.Infrastructure.Persistence.Interceptors;
 /// <summary>
 ///     Represents an interceptor that provides soft-delete functionality to <see cref="IArchivable" /> entities.
 /// </summary>
+// ReSharper disable once InconsistentNaming
 internal sealed class IArchivableInterceptor : SaveChangesInterceptor
 {
     /// <inheritdoc />

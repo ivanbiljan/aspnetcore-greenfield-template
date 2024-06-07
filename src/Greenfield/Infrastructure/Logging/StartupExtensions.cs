@@ -1,4 +1,5 @@
 ﻿using Destructurama;
+using Greenfield.Infrastructure.Hangfire.Filters;
 using Microsoft.Net.Http.Headers;
 using Serilog;
 using Serilog.AspNetCore;
@@ -86,6 +87,7 @@ public static class StartupExtensions
                 loggerConfiguration.Enrich.WithMachineName();
                 loggerConfiguration.Enrich.WithEnvironmentName();
                 loggerConfiguration.Enrich.WithProperty("Project", projectName);
+                loggerConfiguration.Enrich.With<HangfireJobIdEnricher>();
                 loggerConfiguration.Enrich.WithExceptionDetails(
                     new DestructuringOptionsBuilder().WithDestructurers(
                         new[]
@@ -103,7 +105,7 @@ public static class StartupExtensions
     }
     
     /// <summary>
-    ///     Configures Serilog's request logging middleware. Enriches the diagnostic context with protcol, scheme and request headers.
+    ///     Configures Serilog's request logging middleware. Enriches the diagnostic context with the protocol, scheme and request headers.
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection" />.</param>
     /// <returns>The modified <see cref="IServiceCollection" /> to allow chaining.</returns>
