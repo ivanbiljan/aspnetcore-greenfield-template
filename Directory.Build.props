@@ -1,7 +1,14 @@
 ﻿<Project>
     <PropertyGroup>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    </PropertyGroup>
+    
+    <PropertyGroup>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+    
+    <PropertyGroup>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <NoWarn>1591</NoWarn>
-        <Nullable>enable</Nullable>
     </PropertyGroup>
 </Project>
