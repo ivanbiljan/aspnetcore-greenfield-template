@@ -57,7 +57,16 @@ public sealed class DisableMultipleQueuedItemsAttribute : JobFilterAttribute, IS
             return string.Empty;
         }
 
-        var parameters = job.Args.Count == 0 ? string.Empty : string.Join(".", job.Args);
+        var parameters = string.Empty;
+        if (job.Args is {Count: > 0})
+        {
+            var applicableParameters = job.Method.GetParameters()
+                .Where(m => m.GetCustomAttributes(typeof(FingerprintIgnoreAttribute), false).Length == 0)
+                .Select(m => m.Position);
+
+            parameters = applicableParameters.Aggregate(parameters, (current, sa) => current + $"{job.Args[sa]}.")
+                .TrimEnd('.');
+        }
 
         return $"{job.Type.Name}.{job.Method.Name}.{parameters}";
     }
