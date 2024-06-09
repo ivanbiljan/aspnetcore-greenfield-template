@@ -128,9 +128,15 @@ public static class StartupExtensions
                 {
                     context.Set("RequestProtocol", httpContext.Request.Protocol);
                     context.Set("RequestScheme", httpContext.Request.Scheme);
+                    
                     context.Set(
                         "RequestHeaders",
                         httpContext.Request.Headers.Where(h => RequestHeaders.Contains(h.Key))
+                    );
+                    
+                    context.Set(
+                        "ResponseHeaders",
+                        httpContext.Response.Headers.Where(h => ResponseHeaders.Contains(h.Key))
                     );
                     
                     context.Set("User", httpContext.User.Identity?.Name);
