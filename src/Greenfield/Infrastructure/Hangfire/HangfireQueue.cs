@@ -27,6 +27,8 @@ public sealed record HangfireQueue
         _queueName = queueName;
     }
     
+    public static implicit operator string(HangfireQueue? queue) => queue?._queueName ?? Default;
+    
     /// <summary>
     ///     Returns a collection of available queues.
     /// </summary>
