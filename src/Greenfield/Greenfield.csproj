@@ -1,28 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Destructurama.Attributed" />
-        <PackageReference Include="Hangfire" />
-        <PackageReference Include="Hangfire.Console" />
-        <PackageReference Include="Hangfire.PostgreSql" />
-        <PackageReference Include="Hellang.Middleware.ProblemDetails" />
-        <PackageReference Include="MediatR" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" />
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
-        <PackageReference Include="Serilog" />
-        <PackageReference Include="Serilog.AspNetCore" />
-        <PackageReference Include="Serilog.Enrichers.Environment" />
-        <PackageReference Include="Serilog.Exceptions.Refit" />
-        <PackageReference Include="Swashbuckle.AspNetCore" />
-        <PackageReference Include="FluentValidation" />
+        <PackageReference Include="Destructurama.Attributed"/>
+        <PackageReference Include="Hangfire"/>
+        <PackageReference Include="Hangfire.Console"/>
+        <PackageReference Include="Hangfire.PostgreSql"/>
+        <PackageReference Include="Hellang.Middleware.ProblemDetails"/>
+        <PackageReference Include="MediatR"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"/>
+        <PackageReference Include="Serilog"/>
+        <PackageReference Include="Serilog.AspNetCore"/>
+        <PackageReference Include="Serilog.Enrichers.Environment"/>
+        <PackageReference Include="Serilog.Exceptions.Refit"/>
+        <PackageReference Include="Swashbuckle.AspNetCore"/>
+        <PackageReference Include="FluentValidation"/>
     </ItemGroup>
 
     <ItemGroup>

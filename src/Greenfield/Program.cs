@@ -15,7 +15,7 @@ Log.Logger = new LoggerConfiguration()
 try
 {
     var builder = WebApplication.CreateBuilder(args);
-
+    
     builder.AddEntityFramework();
     builder.AddHangfireInternal();
     builder.Services.AddSerilogInternal("Api");
@@ -24,23 +24,23 @@ try
     
     builder.Services.AddProblemDetails(ProblemDetailsMiddleware.ConfigureProblemDetails);
     builder.Services.AddProblemDetailsConventions();
-
+    
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
-
+    
     var app = builder.Build();
-
+    
     app.UseSerilogRequestLogging();
-
+    
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
         app.UseSwaggerUI();
     }
-
+    
     app.UseHttpsRedirection();
     app.UseProblemDetails();
-
+    
     app.Run();
 }
 catch (Exception ex) when (ex is not HostAbortedException)

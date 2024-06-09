@@ -17,9 +17,9 @@ public static class StartupExtensions
                 {
                     TypeNameHandling = TypeNameHandling.All
                 };
-
+                
                 hangfireConfiguration.UseSerializerSettings(serializationSettings);
-
+                
                 hangfireConfiguration.SetDataCompatibilityLevel(CompatibilityLevel.Version_170);
                 hangfireConfiguration.UseSimpleAssemblyNameTypeSerializer();
                 hangfireConfiguration.UsePostgreSqlStorage(
@@ -29,14 +29,14 @@ public static class StartupExtensions
                         PrepareSchemaIfNecessary = true
                     }
                 );
-
+                
                 hangfireConfiguration.UseConsole();
-
+                
                 hangfireConfiguration.UseFilter(new AutomaticRetryAttribute {Attempts = 1});
                 hangfireConfiguration.UseFilter(new HangfireJobIdEnricher());
             }
         );
-
+        
         return builder;
     }
 }

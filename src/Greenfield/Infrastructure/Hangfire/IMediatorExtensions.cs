@@ -12,7 +12,7 @@ public sealed class MediatorWrapper(IMediator mediator)
     {
         await mediator.Send(request);
     }
-
+    
     [DisplayName("{0}")]
     public async Task Send<TResponse>(string displayName, IRequest<TResponse> request)
     {
@@ -31,7 +31,10 @@ public static class IMediatorExtensions
     /// <param name="mediator">The <see cref="IMediator" /> instance used to queue the request.</param>
     /// <param name="displayName">The name used to display the job in Hangfire.</param>
     /// <param name="request">The request.</param>
-    /// <param name="queue">The <see cref="HangfireQueue" />. Jobs are placed into the default queue if <see langword="null" />.</param>
+    /// <param name="queue">
+    ///     The <see cref="HangfireQueue" />. Jobs are placed into the default queue if <see langword="null" />
+    ///     .
+    /// </param>
     /// <param name="enqueueAt">The <see cref="DateTime" /> when the job will be enqueued.</param>
     public static void Enqueue(
         this IMediator mediator,
@@ -48,24 +51,27 @@ public static class IMediatorExtensions
                 wrapper => wrapper.Send(displayName, request),
                 enqueueAt.Value - DateTime.UtcNow
             );
-
+            
             return;
         }
-
+        
         queue ??= HangfireQueue.Default;
         backgroundJobClient.Create<MediatorWrapper>(
             wrapper => wrapper.Send(displayName, request),
             new EnqueuedState(queue.ToString())
         );
     }
-
+    
     /// <summary>
     ///     Enqueues a Hangfire job that will handle the provided request.
     /// </summary>
     /// <param name="mediator">The <see cref="IMediator" /> instance used to queue the request.</param>
     /// <param name="displayName">The name used to display the job in Hangfire.</param>
     /// <param name="request">The request.</param>
-    /// <param name="queue">The <see cref="HangfireQueue" />. Jobs are placed into the default queue if <see langword="null" />.</param>
+    /// <param name="queue">
+    ///     The <see cref="HangfireQueue" />. Jobs are placed into the default queue if <see langword="null" />
+    ///     .
+    /// </param>
     /// <param name="enqueueAt">The <see cref="DateTime" /> when the job will be enqueued.</param>
     /// <typeparam name="TResponse">The type of response, as indicated by <paramref name="request" />.</typeparam>
     public static void Enqueue<TResponse>(
@@ -83,10 +89,10 @@ public static class IMediatorExtensions
                 wrapper => wrapper.Send(displayName, request),
                 enqueueAt.Value - DateTime.UtcNow
             );
-
+            
             return;
         }
-
+        
         queue ??= HangfireQueue.Default;
         backgroundJobClient.Create<MediatorWrapper>(
             wrapper => wrapper.Send(displayName, request),

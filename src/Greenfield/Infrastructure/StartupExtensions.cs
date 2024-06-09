@@ -11,12 +11,12 @@ public static class StartupExtensions
             options =>
             {
                 options.RegisterServicesFromAssemblyContaining<Program>();
-
+                
                 options.AddBehavior(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
                 options.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             }
         );
-
+        
         return services;
     }
 }

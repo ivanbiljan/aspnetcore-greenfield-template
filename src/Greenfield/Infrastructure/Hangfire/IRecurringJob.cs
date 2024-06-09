@@ -11,12 +11,12 @@ public interface IRecurringJob
     ///     Gets a cron expression that defines how often the job is executed.
     /// </summary>
     string Cron { get; }
-
+    
     /// <summary>
     ///     Gets a unique identifier for this job. Assume that identifiers are case-sensitive.
     /// </summary>
     string JobId { get; }
-
+    
     /// <summary>
     ///     The method invoked by Hangfire to execute the job.
     /// </summary>

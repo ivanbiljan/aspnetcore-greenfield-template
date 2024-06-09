@@ -17,7 +17,8 @@ internal static class ProblemDetailsMiddleware
         options.MapToStatusCode<Exception>(StatusCodes.Status500InternalServerError);
     }
     
-    private static void MapFluentValidationException(this ProblemDetailsOptions options) =>
+    private static void MapFluentValidationException(this ProblemDetailsOptions options)
+    {
         options.Map<ValidationException>(
             (ctx, ex) =>
             {
@@ -33,4 +34,5 @@ internal static class ProblemDetailsMiddleware
                 return factory.CreateValidationProblemDetails(ctx, errors);
             }
         );
+    }
 }

@@ -26,13 +26,13 @@ public static class StartupExtensions
                         }
                     );
                 }
-
+                
                 var connectionString = builder.Configuration.GetConnectionString("Npgsql");
-
+                
                 options.UseNpgsql(connectionString, configuration => { configuration.EnableRetryOnFailure(3); });
             }
         );
-
+        
         return builder;
     }
 }

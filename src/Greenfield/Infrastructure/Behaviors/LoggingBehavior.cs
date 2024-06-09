@@ -18,20 +18,20 @@ internal sealed class LoggingBehavior<TRequest, TResponse>(
         {
             ["Request"] = request
         };
-
+        
         var httpContext = httpContextAccessor.HttpContext;
         if (httpContext is not null)
         {
             additionalLogProperties["RequestMethod"] = httpContext.Request.Method;
             additionalLogProperties["RequestPath"] = httpContext.Request.Path.ToString();
-
+            
             additionalLogProperties["User"] = httpContext.User.Identity?.Name;
             additionalLogProperties["RemoteIP"] = httpContext.Connection.RemoteIpAddress;
         }
-
+        
         var requestType = typeof(TRequest);
         var handlerName = requestType.DeclaringType?.FullName ?? requestType.FullName!;
-
+        
         using (logger.BeginScope(additionalLogProperties))
         {
             try
@@ -39,21 +39,21 @@ internal sealed class LoggingBehavior<TRequest, TResponse>(
                 var stopwatch = Stopwatch.StartNew();
                 var response = await next();
                 stopwatch.Stop();
-
+                
                 additionalLogProperties["Response"] = response;
-
+                
                 logger.LogInformation(
                     "{Handler} executed in {ElapsedTime:000} ms",
                     handlerName,
                     stopwatch.Elapsed.TotalMilliseconds
                 );
-
+                
                 return response;
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "{Handler} returned an exception", handlerName);
-
+                
                 throw;
             }
         }

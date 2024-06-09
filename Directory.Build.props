@@ -1,14 +1,18 @@
 ﻿<Project>
     <PropertyGroup>
-        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    </PropertyGroup>
-    
-    <PropertyGroup>
+        <LangVersion>latest</LangVersion>
+
         <Nullable>enable</Nullable>
-    </PropertyGroup>
-    
-    <PropertyGroup>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <NoWarn>1591</NoWarn>
+        <WarningsAsErrors>Nullable</WarningsAsErrors>
+
+        <ImplicitUsings>enable</ImplicitUsings>
+
+        <TargetFramework>net8.0</TargetFramework>
+        <AnalysisLevel>latest-all</AnalysisLevel>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <TieredPGO>true</TieredPGO>
+
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>$(NoWarn),1591</NoWarn>
     </PropertyGroup>
 </Project>

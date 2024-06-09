@@ -43,7 +43,7 @@ public static class StartupExtensions
         "X-Amzn-Trace-Id",
         "X-Forwarded-For"
     };
-
+    
     private static readonly HashSet<string> ResponseHeaders = new(StringComparer.OrdinalIgnoreCase)
     {
         HeaderNames.AcceptRanges,
@@ -82,7 +82,7 @@ public static class StartupExtensions
                 loggerConfiguration.MinimumLevel.Override("Microsoft", LogEventLevel.Warning);
                 loggerConfiguration.MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information);
                 loggerConfiguration.MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Information);
-
+                
                 loggerConfiguration.Enrich.FromLogContext();
                 loggerConfiguration.Enrich.WithMachineName();
                 loggerConfiguration.Enrich.WithEnvironmentName();
@@ -96,16 +96,17 @@ public static class StartupExtensions
                         }
                     )
                 );
-
+                
                 loggerConfiguration.Destructure.UsingAttributes();
-
+                
                 loggerConfiguration.WriteTo.Console();
             }
         );
     }
     
     /// <summary>
-    ///     Configures Serilog's request logging middleware. Enriches the diagnostic context with the protocol, scheme and request headers.
+    ///     Configures Serilog's request logging middleware. Enriches the diagnostic context with the protocol, scheme and
+    ///     request headers.
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection" />.</param>
     /// <returns>The modified <see cref="IServiceCollection" /> to allow chaining.</returns>
@@ -122,7 +123,7 @@ public static class StartupExtensions
                         "RequestHeaders",
                         httpContext.Request.Headers.Where(h => RequestHeaders.Contains(h.Key))
                     );
-
+                    
                     context.Set("User", httpContext.User.Identity?.Name);
                     context.Set("RemoteIP", httpContext.Connection.RemoteIpAddress?.MapToIPv4());
                 };
