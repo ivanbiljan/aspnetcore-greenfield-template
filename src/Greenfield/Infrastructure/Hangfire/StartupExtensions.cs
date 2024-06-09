@@ -10,6 +10,8 @@ public static class StartupExtensions
 {
     public static IHostApplicationBuilder AddHangfireInternal(this IHostApplicationBuilder builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+        
         builder.Services.AddHangfire(
             hangfireConfiguration =>
             {

@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Globalization;
 using Greenfield.Infrastructure;
 using Greenfield.Infrastructure.Hangfire;
 using Greenfield.Infrastructure.Logging;
@@ -9,7 +10,7 @@ using Serilog;
 using ProblemDetailsMiddleware = Greenfield.Infrastructure.Web.ProblemDetailsMiddleware;
 
 Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
+    .WriteTo.Console(formatProvider: CultureInfo.InvariantCulture)
     .CreateBootstrapLogger();
 
 try

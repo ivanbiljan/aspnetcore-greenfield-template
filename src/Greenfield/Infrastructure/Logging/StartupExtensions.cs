@@ -1,4 +1,5 @@
-﻿using Destructurama;
+﻿using System.Globalization;
+using Destructurama;
 using Greenfield.Infrastructure.Hangfire.Filters;
 using Microsoft.Net.Http.Headers;
 using Serilog;
@@ -7,6 +8,7 @@ using Serilog.Events;
 using Serilog.Exceptions;
 using Serilog.Exceptions.Core;
 using Serilog.Exceptions.Refit.Destructurers;
+using Serilog.Sinks.SystemConsole.Themes;
 
 namespace Greenfield.Infrastructure.Logging;
 
@@ -75,6 +77,8 @@ public static class StartupExtensions
     /// <returns>The modified <paramref name="services" /> to allow chaining.</returns>
     public static IServiceCollection AddSerilogInternal(this IServiceCollection services, string projectName)
     {
+        ArgumentNullException.ThrowIfNull(services);
+        
         return services.AddSerilog(
             (_, loggerConfiguration) =>
             {
@@ -99,7 +103,10 @@ public static class StartupExtensions
                 
                 loggerConfiguration.Destructure.UsingAttributes();
                 
-                loggerConfiguration.WriteTo.Console();
+                loggerConfiguration.WriteTo.Console(
+                    theme: AnsiConsoleTheme.Code,
+                    formatProvider: CultureInfo.InvariantCulture
+                );
             }
         );
     }
@@ -112,6 +119,8 @@ public static class StartupExtensions
     /// <returns>The modified <see cref="IServiceCollection" /> to allow chaining.</returns>
     public static IServiceCollection ConfigureSerilogHttpLogging(this IServiceCollection services)
     {
+        ArgumentNullException.ThrowIfNull(services);
+        
         services.Configure<RequestLoggingOptions>(
             options =>
             {

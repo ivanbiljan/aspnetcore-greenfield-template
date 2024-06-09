@@ -7,6 +7,8 @@ public static class StartupExtensions
 {
     public static IHostApplicationBuilder AddEntityFramework(this IHostApplicationBuilder builder)
     {
+        ArgumentNullException.ThrowIfNull(builder);
+        
         builder.Services.AddDbContext<DatabaseContext>(
             options =>
             {

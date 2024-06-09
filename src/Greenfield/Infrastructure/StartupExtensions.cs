@@ -7,6 +7,8 @@ public static class StartupExtensions
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
+        ArgumentNullException.ThrowIfNull(services);
+        
         services.AddMediatR(
             options =>
             {

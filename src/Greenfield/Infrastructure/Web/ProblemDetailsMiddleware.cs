@@ -8,17 +8,6 @@ internal static class ProblemDetailsMiddleware
 {
     public static void ConfigureProblemDetails(ProblemDetailsOptions options)
     {
-        options.MapFluentValidationException();
-        options.MapToStatusCode<NotImplementedException>(StatusCodes.Status501NotImplemented);
-        options.MapToStatusCode<HttpRequestException>(StatusCodes.Status503ServiceUnavailable);
-        
-        // Because exceptions are handled polymorphically, this will act as a "catch all" mapping, which is why it's added last.
-        // If an exception other than NotImplementedException and HttpRequestException is thrown, this will handle it.
-        options.MapToStatusCode<Exception>(StatusCodes.Status500InternalServerError);
-    }
-    
-    private static void MapFluentValidationException(this ProblemDetailsOptions options)
-    {
         options.Map<ValidationException>(
             (ctx, ex) =>
             {
@@ -34,5 +23,12 @@ internal static class ProblemDetailsMiddleware
                 return factory.CreateValidationProblemDetails(ctx, errors);
             }
         );
+        
+        options.MapToStatusCode<NotImplementedException>(StatusCodes.Status501NotImplemented);
+        options.MapToStatusCode<HttpRequestException>(StatusCodes.Status503ServiceUnavailable);
+        
+        // Because exceptions are handled polymorphically, this will act as a "catch all" mapping, which is why it's added last.
+        // If an exception other than NotImplementedException and HttpRequestException is thrown, this will handle it.
+        options.MapToStatusCode<Exception>(StatusCodes.Status500InternalServerError);
     }
 }

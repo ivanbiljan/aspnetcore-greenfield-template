@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿#pragma warning disable CA1848 // Use the LoggerMessage delegates
+using System.Diagnostics;
 using MediatR;
 
 namespace Greenfield.Infrastructure.Behaviors;
