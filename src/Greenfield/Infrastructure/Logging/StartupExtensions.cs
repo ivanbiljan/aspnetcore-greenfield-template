@@ -7,6 +7,8 @@ using Serilog.AspNetCore;
 using Serilog.Events;
 using Serilog.Exceptions;
 using Serilog.Exceptions.Core;
+using Serilog.Exceptions.Destructurers;
+using Serilog.Exceptions.EntityFrameworkCore.Destructurers;
 using Serilog.Exceptions.Refit.Destructurers;
 using Serilog.Sinks.SystemConsole.Themes;
 
@@ -91,13 +93,12 @@ public static class StartupExtensions
                 loggerConfiguration.Enrich.WithMachineName();
                 loggerConfiguration.Enrich.WithEnvironmentName();
                 loggerConfiguration.Enrich.WithProperty("Project", projectName);
+                loggerConfiguration.Enrich.WithProperty("GitBranch", ThisAssembly.Git.Branch);
+                loggerConfiguration.Enrich.WithProperty("GitCommit", ThisAssembly.Git.Commit);
                 loggerConfiguration.Enrich.With<HangfireJobIdEnricher>();
                 loggerConfiguration.Enrich.WithExceptionDetails(
                     new DestructuringOptionsBuilder().WithDestructurers(
-                        new[]
-                        {
-                            new ApiExceptionDestructurer()
-                        }
+                        [new ApiExceptionDestructurer(), new DbUpdateExceptionDestructurer()]
                     )
                 );
                 
