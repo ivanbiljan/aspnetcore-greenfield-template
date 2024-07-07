@@ -1,4 +1,4 @@
-﻿namespace Greenfield.Tests.Extensions;
+﻿namespace Greenfield.Tests.Infrastructure;
 
 [CollectionDefinition(FixtureName)]
 public sealed class IntegrationTestCollectionContainer : ICollectionFixture<CustomApplicationFactory>

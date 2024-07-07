@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Greenfield.Tests.Extensions;
+namespace Greenfield.Tests.Infrastructure;
 
 [Collection(IntegrationTestCollectionContainer.FixtureName)]
 public abstract class IntegrationTestBase(CustomApplicationFactory factory)

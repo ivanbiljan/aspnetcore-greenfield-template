@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-namespace Greenfield.Tests.Extensions;
+﻿namespace Greenfield.Tests.Infrastructure;
 
 public static class Extensions
 {

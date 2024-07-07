@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using Testcontainers.PostgreSql;
 
-namespace Greenfield.Tests.Extensions;
+namespace Greenfield.Tests.Infrastructure;
 
 public sealed class CustomApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
