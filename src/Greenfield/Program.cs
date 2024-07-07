@@ -73,3 +73,8 @@ finally
         await Log.CloseAndFlushAsync();
     }
 }
+
+namespace Greenfield
+{
+    public class Program;
+}
