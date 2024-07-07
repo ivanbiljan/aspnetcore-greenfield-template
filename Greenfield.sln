@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Greenfield", "src\Greenfield\Greenfield.csproj", "{73B068F2-E7FF-49AA-B202-011B2544D98F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "src\WebApi\WebApi.csproj", "{73B068F2-E7FF-49AA-B202-011B2544D98F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{983A1AFA-3591-478D-87D5-0DBE3F226809}"
 EndProject
@@ -25,7 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceGenerators", "src\Sou
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceGenerators.Tests", "tests\SourceGenerators.Tests\SourceGenerators.Tests.csproj", "{411D283A-2E99-487B-8450-BB7AE14FEC0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Greenfield.Tests", "tests\Greenfield.Tests\Greenfield.Tests.csproj", "{80762843-6DD2-4A87-82D1-3232DAD58167}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi.Tests", "tests\WebApi.Tests\WebApi.Tests.csproj", "{80762843-6DD2-4A87-82D1-3232DAD58167}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

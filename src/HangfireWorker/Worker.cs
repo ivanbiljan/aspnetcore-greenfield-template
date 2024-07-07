@@ -1,4 +1,4 @@
-using Greenfield.Infrastructure.Hangfire;
+using WebApi.Infrastructure.Hangfire;
 
 namespace HangfireWorker;
 
