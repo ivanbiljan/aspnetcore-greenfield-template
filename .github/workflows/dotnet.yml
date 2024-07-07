@@ -19,11 +19,11 @@ jobs:
                   dotnet-version: 8.0.x
 
             - name: Restore
-              run: dotnet restore ./Hsa.sln
+              run: dotnet restore ./Greenfield.sln
 
             - name: Build
-              run: dotnet build ./Hsa.sln --no-restore
+              run: dotnet build ./Greenfield.sln --no-restore
 
             - name: Test
-              run: dotnet test ./Hsa.sln --no-build
+              run: dotnet test ./Greenfield.sln --no-build
         
