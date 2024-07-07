@@ -21,6 +21,9 @@ public static class RecurringJobProvider
     /// </summary>
     public static void ScheduleRecurringJobsForAssembly(Assembly assembly, IServiceProvider serviceProvider)
     {
+        ArgumentNullException.ThrowIfNull(assembly);
+        ArgumentNullException.ThrowIfNull(serviceProvider);
+        
         var recurringJobTypesFromEntryAssembly = assembly
             .GetTypes()
             .Where(x => !x.IsAbstract)
@@ -30,10 +33,12 @@ public static class RecurringJobProvider
             .ToList();
         
         var recurringJobManager = serviceProvider.GetRequiredService<IRecurringJobManager>();
+        
+        using var serviceScope = serviceProvider.CreateScope();
         foreach (var jobHandler in recurringJobTypesFromEntryAssembly)
         {
             var job = (IRecurringJob) ActivatorUtilities.CreateInstance(
-                serviceProvider.CreateScope().ServiceProvider,
+                serviceScope.ServiceProvider,
                 jobHandler
             );
             

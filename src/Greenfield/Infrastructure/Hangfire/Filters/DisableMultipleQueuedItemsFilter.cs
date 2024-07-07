@@ -17,19 +17,19 @@ public sealed class DisableMultipleQueuedItemsAttribute : JobFilterAttribute, IS
     private static readonly TimeSpan LockTimeout = TimeSpan.FromSeconds(10);
     private static readonly TimeSpan FingerprintTimeout = TimeSpan.FromHours(1);
     
-    public void OnPerformed(PerformedContext filterContext)
+    public void OnPerformed(PerformedContext context)
     {
-        RemoveFingerprint(filterContext.Connection, filterContext.BackgroundJob.Job);
+        RemoveFingerprint(context.Connection, context.BackgroundJob.Job);
     }
     
-    public void OnPerforming(PerformingContext filterContext)
+    public void OnPerforming(PerformingContext context)
     {
-        if (TryAddFingerprintIfNotExists(filterContext.Connection, filterContext.BackgroundJob.Job))
+        if (TryAddFingerprintIfNotExists(context.Connection, context.BackgroundJob.Job))
         {
             return;
         }
         
-        filterContext.Canceled = true;
+        context.Canceled = true;
     }
     
     private static void RemoveFingerprint(IStorageConnection connection, Job job)
@@ -42,11 +42,9 @@ public sealed class DisableMultipleQueuedItemsAttribute : JobFilterAttribute, IS
         var lockFingerprint = GetFingerprintLockKey(key);
         using (connection.AcquireDistributedLock(lockFingerprint, LockTimeout))
         {
-            using (var transaction = connection.CreateWriteTransaction())
-            {
-                transaction.RemoveHash(key);
-                transaction.Commit();
-            }
+            using var transaction = connection.CreateWriteTransaction();
+            transaction.RemoveHash(key);
+            transaction.Commit();
         }
     }
     
@@ -88,8 +86,8 @@ public sealed class DisableMultipleQueuedItemsAttribute : JobFilterAttribute, IS
         var hash = SHA256.HashData(Encoding.UTF8.GetBytes(data));
         var calculatedSignature = BitConverter
             .ToString(hash)
-            .Replace("-", string.Empty)
-            .ToLowerInvariant();
+            .Replace("-", string.Empty, StringComparison.Ordinal)
+            .ToUpperInvariant();
         
         return calculatedSignature;
     }
@@ -114,7 +112,7 @@ public sealed class DisableMultipleQueuedItemsAttribute : JobFilterAttribute, IS
             if (fingerprint != null &&
                 fingerprint.TryGetValue(MetadataKey, out var value) &&
                 DateTimeOffset.TryParse(
-                    value[..fingerprint[MetadataKey].IndexOf(' ')],
+                    value[..fingerprint[MetadataKey].IndexOf(' ', StringComparison.Ordinal)],
                     null,
                     DateTimeStyles.RoundtripKind,
                     out var timestamp

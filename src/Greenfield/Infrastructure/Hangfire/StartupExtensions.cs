@@ -1,4 +1,5 @@
-﻿using Greenfield.Infrastructure.Hangfire.Filters;
+﻿using System.Diagnostics.CodeAnalysis;
+using Greenfield.Infrastructure.Hangfire.Filters;
 using Hangfire;
 using Hangfire.Console;
 using Hangfire.PostgreSql;
@@ -8,6 +9,7 @@ namespace Greenfield.Infrastructure.Hangfire;
 
 public static class StartupExtensions
 {
+    [SuppressMessage("Security", "CA2326:Do not use TypeNameHandling values other than None")]
     public static IHostApplicationBuilder AddHangfireInternal(this IHostApplicationBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
