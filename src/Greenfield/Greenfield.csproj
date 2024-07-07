@@ -5,12 +5,15 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="AutoRegisterInject" />
         <PackageReference Include="Destructurama.Attributed"/>
+        <PackageReference Include="EFCore.NamingConventions" />
         <PackageReference Include="Hangfire"/>
         <PackageReference Include="Hangfire.Console"/>
         <PackageReference Include="Hangfire.PostgreSql"/>
         <PackageReference Include="Hellang.Middleware.ProblemDetails"/>
         <PackageReference Include="MediatR"/>
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"/>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore"/>
         <PackageReference Include="Microsoft.SourceLink.GitHub">
@@ -35,6 +38,10 @@
         <Content Include="..\.dockerignore">
             <Link>.dockerignore</Link>
         </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SourceGenerators\SourceGenerators.csproj" OutputItemType="Analyzer" />
     </ItemGroup>
 
 </Project>

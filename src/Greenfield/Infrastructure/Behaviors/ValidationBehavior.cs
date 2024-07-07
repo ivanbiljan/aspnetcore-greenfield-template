@@ -3,14 +3,15 @@ using MediatR;
 
 namespace Greenfield.Infrastructure.Behaviors;
 
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Implicitly invoked by MediatR")]
 internal sealed class ValidationBehavior<TRequest, TResponse>(
     IEnumerable<IValidator<TRequest>> validators,
-    ILogger<ValidationBehavior<TRequest, TResponse>> logger
+    ILogger logger
 ) : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
-    private readonly ILogger<ValidationBehavior<TRequest, TResponse>> _logger = logger;
     private readonly IEnumerable<IValidator<TRequest>> _validators = validators;
+    private readonly ILogger _logger = logger.ForContext<ValidationBehavior<TRequest, TResponse>>();
     
     /// <inheritdoc />
     public async Task<TResponse> Handle(
@@ -31,15 +32,8 @@ internal sealed class ValidationBehavior<TRequest, TResponse>(
         var errors = validationResults.Where(v => v.Errors.Count > 0).SelectMany(v => v.Errors).ToArray();
         if (errors.Length != 0)
         {
-            var additionalLogProperties = new Dictionary<string, object>
-            {
-                ["Issues"] = errors
-            };
-            
-            using (_logger.BeginScope(additionalLogProperties))
-            {
-                _logger.LogInformation("Validation failed for {TRequest}", typeof(TRequest).Name);
-            }
+            _logger.ForContext("Issues", errors)
+                .Information("Validation failed for {TRequest}", typeof(TRequest).Name);
             
             throw new ValidationException("One or more validation errors occurred", errors);
         }

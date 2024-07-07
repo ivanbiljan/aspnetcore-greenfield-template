@@ -9,7 +9,9 @@ public static class StartupExtensions
     {
         ArgumentNullException.ThrowIfNull(builder);
         
-        builder.Services.AddDbContext<DatabaseContext>(
+        var connectionString = builder.Configuration.GetConnectionString("Npgsql");
+        
+        builder.Services.AddDbContext<ApplicationDbContext>(
             options =>
             {
                 options.EnableDetailedErrors();
@@ -29,9 +31,14 @@ public static class StartupExtensions
                     );
                 }
                 
-                var connectionString = builder.Configuration.GetConnectionString("Npgsql");
-                
-                options.UseNpgsql(connectionString, configuration => { configuration.EnableRetryOnFailure(3); });
+                options.UseNpgsql(
+                        connectionString,
+                        configuration =>
+                        {
+                            configuration.EnableRetryOnFailure(3);
+                        }
+                    )
+                    .UseSnakeCaseNamingConvention();
             }
         );
         
