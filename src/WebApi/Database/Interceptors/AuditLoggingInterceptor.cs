@@ -39,17 +39,18 @@ internal sealed class AuditLoggingInterceptor(IHttpContextAccessor httpContextAc
 
         foreach (var entry in eventData.Context.ChangeTracker.Entries())
         {
+            if (entry.Metadata.FindAnnotation(Annotations.LogAuditTrail) is not {Value: true})
+            {
+                continue;
+            }
+            
             if (entry.State is not EntityState.Added and not EntityState.Modified and not EntityState.Deleted)
             {
                 continue;
             }
 
-            if (entry.Metadata.FindAnnotation(Annotations.LogAuditTrail) is not {Value: true})
-            {
-                continue;
-            }
-
             var modifiedProperties = entry.Properties
+                .Where(p => p.Metadata.FindAnnotation(Annotations.ExcludeFromAuditTrail) is {Value: false})
                 .Where(p => p.IsModified)
                 .Select(p => p.Metadata.Name)
                 .ToArray();

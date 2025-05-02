@@ -14,14 +14,14 @@ internal static partial class Login
 {
     private static async ValueTask<Response> HandleAsync(
         Command command,
-        ApplicationDbContext db,
+        ApplicationDbContext context,
         IPasswordHasher<User> passwordHasher,
         AccessTokenManager accessTokenManager,
         ILogger<Command> logger,
         CancellationToken cancellationToken
     )
     {
-        var user = await db.Users
+        var user = await context.Users
             .Where(a => a.Email == command.Email)
             .SingleOrDefaultAsync(cancellationToken) ?? throw new NotFoundException("Invalid email or password");
 
@@ -42,7 +42,7 @@ internal static partial class Login
 
         var accessToken = await accessTokenManager.CreateAccessToken(user.Id, cancellationToken);
 
-        await db.SaveChangesAsync(cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
 
         return new Response
         {

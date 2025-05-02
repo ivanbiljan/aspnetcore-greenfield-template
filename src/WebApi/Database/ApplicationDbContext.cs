@@ -41,6 +41,14 @@ internal sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext
                 Annotations.LogAuditTrail,
                 entityType.ClrType.GetCustomAttribute<LogAuditTrailAttribute>(true) is not null
             );
+
+            foreach (var property in entityType.GetProperties())
+            {
+                property.AddAnnotation(
+                    Annotations.ExcludeFromAuditTrail,
+                    entityType.ClrType.GetCustomAttribute<ExcludeFromAuditTrailAttribute>(false) is not null
+                );
+            }
         }
     }
 }
