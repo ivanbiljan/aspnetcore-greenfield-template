@@ -8,5 +8,5 @@ internal interface IArchivable
     /// <summary>
     ///     Gets the <see cref="DateTime" /> the entity was soft-deleted on.
     /// </summary>
-    DateTime? ArchivedOnUtc { get; set; }
+    Instant? ArchivedOnUtc { get; set; }
 }

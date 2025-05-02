@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+using NodaTime.Extensions;
 
 namespace WebApi.Database.Interceptors;
 
@@ -6,8 +7,10 @@ namespace WebApi.Database.Interceptors;
 ///     Represents an interceptor that provides soft-delete functionality to <see cref="IArchivable" /> entities.
 /// </summary>
 // ReSharper disable once InconsistentNaming
-internal sealed class IArchivableInterceptor : SaveChangesInterceptor
+internal sealed class IArchivableInterceptor(TimeProvider timeProvider) : SaveChangesInterceptor
 {
+    private readonly TimeProvider _timeProvider = timeProvider;
+
     /// <inheritdoc />
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
@@ -28,7 +31,7 @@ internal sealed class IArchivableInterceptor : SaveChangesInterceptor
             }
 
             entry.State = EntityState.Modified;
-            archivableEntity.ArchivedOnUtc = DateTime.UtcNow;
+            archivableEntity.ArchivedOnUtc = _timeProvider.GetCurrentInstant();
         }
 
         return ValueTask.FromResult(result);
