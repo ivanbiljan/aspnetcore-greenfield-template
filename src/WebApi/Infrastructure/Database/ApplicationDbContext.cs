@@ -31,5 +31,13 @@ internal sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext
         base.OnModelCreating(builder);
 
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        
+        foreach (var entityType in builder.Model.GetEntityTypes())
+        {
+            entityType.AddAnnotation(
+                Annotations.LogAuditTrail,
+                entityType.ClrType.GetCustomAttribute<LogAuditTrailAttribute>(true) is not null
+            );
+        }
     }
 }

@@ -13,6 +13,8 @@ internal static class StartupExtensions
         var connectionString = builder.Configuration.GetConnectionString("Npgsql");
 
         builder.Services.AddSingleton<SlowQueryLoggingInterceptor>();
+        builder.Services.AddSingleton<AuditLoggingInterceptor>();
+        builder.Services.AddSingleton<IArchivableInterceptor>();
         
         builder.Services.AddDbContext<ApplicationDbContext>(
             (provider, options) =>
@@ -43,7 +45,11 @@ internal static class StartupExtensions
                     )
                     .UseSnakeCaseNamingConvention();
 
-                options.AddInterceptors(provider.GetRequiredService<SlowQueryLoggingInterceptor>());
+                options.AddInterceptors(
+                    provider.GetRequiredService<SlowQueryLoggingInterceptor>(),
+                    provider.GetRequiredService<AuditLoggingInterceptor>(),
+                    provider.GetRequiredService<IArchivableInterceptor>()
+                );
             }
         );
         
