@@ -1,25 +1,42 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Globalization;
+using System.Security.Claims;
 
 namespace WebApi.Infrastructure.Web;
 
 internal interface ICurrentUserService
 {
-    string UserId { get; }
+    bool IsAuthenticated { get; }
+
+    string? PreferredLanguage { get; }
+
+    string? UserAgent { get; }
+
+    string? IpAddress { get; }
+
+    int GetId();
 }
 
 [RegisterScoped]
-internal sealed class CurrentUserService(IHttpContextAccessor httpContextAccessor, UserManager<IdentityUser> userManager)
-    : ICurrentUserService
+internal sealed class CurrentUserService(IHttpContextAccessor httpContextAccessor) : ICurrentUserService
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
-    private readonly UserManager<IdentityUser> _userManager = userManager;
-    
-    public string UserId
+
+    public int GetId()
     {
-        get
+        if (_httpContextAccessor.HttpContext?.User is not {Identity.IsAuthenticated: true} principal)
         {
-            return _userManager.GetUserId(_httpContextAccessor.HttpContext!.User) ??
-                   throw new InvalidOperationException();
+            throw new InvalidOperationException();
         }
+
+        return int.Parse(principal.FindFirstValue(ClaimTypes.NameIdentifier)!, CultureInfo.InvariantCulture);
     }
+
+    public bool IsAuthenticated => _httpContextAccessor.HttpContext?.User is {Identity.IsAuthenticated: true};
+
+    public string? PreferredLanguage =>
+        _httpContextAccessor.HttpContext!.Request.Headers.AcceptLanguage.FirstOrDefault();
+
+    public string? UserAgent => _httpContextAccessor.HttpContext!.Request.Headers.UserAgent;
+
+    public string? IpAddress => _httpContextAccessor.HttpContext!.Connection.RemoteIpAddress?.ToString();
 }

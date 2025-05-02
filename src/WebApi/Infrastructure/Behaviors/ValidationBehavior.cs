@@ -4,7 +4,11 @@ using Immediate.Handlers.Shared;
 
 namespace WebApi.Infrastructure.Behaviors;
 
-[SuppressMessage("Maintainability", "CA1515:Consider making public types internal", Justification = "ImmediateHandlers require behaviors to be public to be discoverable")]
+[SuppressMessage(
+    "Maintainability",
+    "CA1515:Consider making public types internal",
+    Justification = "ImmediateHandlers require behaviors to be public to be discoverable"
+)]
 public sealed class ValidationBehavior<TRequest, TResponse>(
     IEnumerable<IValidator<TRequest>> validators,
     ILogger<ValidationBehavior<TRequest, TResponse>> logger

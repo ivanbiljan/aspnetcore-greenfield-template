@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace WebApi.Infrastructure.Database;
+namespace WebApi.Database;
 
 internal sealed class AuditContext : IDisposable
 {

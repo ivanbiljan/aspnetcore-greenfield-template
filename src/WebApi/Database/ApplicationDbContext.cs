@@ -1,17 +1,20 @@
 ﻿using System.Reflection;
 using EntityFramework.Exceptions.PostgreSQL;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
-namespace WebApi.Infrastructure.Database;
+namespace WebApi.Database;
 
 internal sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
+    public DbSet<User> Users => Set<User>();
+
+    public DbSet<UserAuthenticationToken> UserAuthenticationTokens => Set<UserAuthenticationToken>();
+
     /// <inheritdoc />
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
         base.ConfigureConventions(configurationBuilder);
-        
+
         configurationBuilder.Conventions.Remove<TableNameFromDbSetConvention>();
         configurationBuilder.Properties<Enum>().HaveConversion<string>();
         configurationBuilder.Properties<decimal>().HavePrecision(18, 2);
@@ -31,7 +34,7 @@ internal sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext
         base.OnModelCreating(builder);
 
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-        
+
         foreach (var entityType in builder.Model.GetEntityTypes())
         {
             entityType.AddAnnotation(

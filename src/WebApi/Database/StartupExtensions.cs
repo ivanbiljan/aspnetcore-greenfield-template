@@ -1,30 +1,27 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using WebApi.Infrastructure.Database.Interceptors;
+﻿using Microsoft.EntityFrameworkCore.Diagnostics;
+using WebApi.Database.Interceptors;
 
-namespace WebApi.Infrastructure.Database;
+namespace WebApi.Database;
 
 internal static class StartupExtensions
 {
     public static IHostApplicationBuilder AddEntityFramework(this IHostApplicationBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
-        
+
         var connectionString = builder.Configuration.GetConnectionString("Npgsql");
 
         builder.Services.AddSingleton<SlowQueryLoggingInterceptor>();
         builder.Services.AddSingleton<AuditLoggingInterceptor>();
         builder.Services.AddSingleton<IArchivableInterceptor>();
-        
-        builder.Services.AddDbContext<ApplicationDbContext>(
-            (provider, options) =>
+
+        builder.Services.AddDbContext<ApplicationDbContext>((provider, options) =>
             {
                 options.EnableDetailedErrors();
                 if (builder.Environment.IsDevelopment())
                 {
                     options.EnableSensitiveDataLogging();
-                    options.ConfigureWarnings(
-                        warningsConfiguration =>
+                    options.ConfigureWarnings(warningsConfiguration =>
                         {
                             warningsConfiguration.Log(
                                 CoreEventId.FirstWithoutOrderByAndFilterWarning,
@@ -35,13 +32,10 @@ internal static class StartupExtensions
                         }
                     );
                 }
-                
+
                 options.UseNpgsql(
                         connectionString,
-                        configuration =>
-                        {
-                            configuration.EnableRetryOnFailure(3);
-                        }
+                        configuration => { configuration.EnableRetryOnFailure(3); }
                     )
                     .UseSnakeCaseNamingConvention();
 
@@ -52,7 +46,7 @@ internal static class StartupExtensions
                 );
             }
         );
-        
+
         return builder;
     }
 }

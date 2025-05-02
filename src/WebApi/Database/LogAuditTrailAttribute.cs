@@ -1,6 +1,4 @@
-﻿using WebApi.Infrastructure.Database.Models;
-
-namespace WebApi.Infrastructure.Database;
+﻿namespace WebApi.Database;
 
 /// <summary>
 ///     Represents an attribute that instructs Entity Framework to produce detailed audit trails for the annotated entity.

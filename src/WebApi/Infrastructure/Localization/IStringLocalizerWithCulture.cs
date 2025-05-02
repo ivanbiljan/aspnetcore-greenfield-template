@@ -76,24 +76,21 @@ internal sealed class StringLocalizerWithCulture<TResourceSource>(IStringLocaliz
         _localizer[resourceName, localizationCulture];
 }
 
-internal sealed class ResourceManagerStringLocalizerWithCultureFactory
-    : ResourceManagerStringLocalizerFactory, IStringLocalizerWithCultureFactory
+internal sealed class ResourceManagerStringLocalizerWithCultureFactory(
+    IOptions<LocalizationOptions> localizationOptions,
+    ILoggerFactory loggerFactory
+) : ResourceManagerStringLocalizerFactory(localizationOptions, loggerFactory), IStringLocalizerWithCultureFactory
 {
     private readonly ConcurrentDictionary<string, ResourceManagerStringLocalizerWithCulture>
         _localizerCache = new();
 
-    private readonly ILoggerFactory _loggerFactory;
+    private readonly ILoggerFactory _loggerFactory = loggerFactory;
     private readonly IResourceNamesCache _resourceNamesCache = new ResourceNamesCache();
 
-    public ResourceManagerStringLocalizerWithCultureFactory(
-        IOptions<LocalizationOptions> localizationOptions,
-        ILoggerFactory loggerFactory
-    ) : base(localizationOptions, loggerFactory)
+    public new IStringLocalizerWithCulture Create(Type resourceSource)
     {
-        _loggerFactory = loggerFactory;
+        return Create(resourceSource, null);
     }
-
-    public new IStringLocalizerWithCulture Create(Type resourceSource) => Create(resourceSource, null);
 
     public IStringLocalizerWithCulture Create(Type resourceSource, CultureInfo? defaultLocalizationCulture)
     {
@@ -117,8 +114,9 @@ internal sealed class ResourceManagerStringLocalizerWithCultureFactory
         Assembly assembly,
         string baseName,
         CultureInfo? defaultLocalizationCulture
-    ) =>
-        new(
+    )
+    {
+        return new ResourceManagerStringLocalizerWithCulture(
             new ResourceManager(baseName, assembly),
             assembly,
             baseName,
@@ -126,4 +124,5 @@ internal sealed class ResourceManagerStringLocalizerWithCultureFactory
             _loggerFactory.CreateLogger<ResourceManagerStringLocalizer>(),
             defaultLocalizationCulture
         );
+    }
 }

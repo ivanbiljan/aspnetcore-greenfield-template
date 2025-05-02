@@ -13,17 +13,16 @@ internal static class StartupExtensions
     public static IHostApplicationBuilder AddHangfireInternal(this IHostApplicationBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder);
-        
-        builder.Services.AddHangfire(
-            hangfireConfiguration =>
+
+        builder.Services.AddHangfire(hangfireConfiguration =>
             {
                 var serializationSettings = new JsonSerializerSettings
                 {
                     TypeNameHandling = TypeNameHandling.All
                 };
-                
+
                 hangfireConfiguration.UseSerializerSettings(serializationSettings);
-                
+
                 hangfireConfiguration.SetDataCompatibilityLevel(CompatibilityLevel.Version_170);
                 hangfireConfiguration.UseSimpleAssemblyNameTypeSerializer();
                 hangfireConfiguration.UsePostgreSqlStorage(
@@ -33,14 +32,14 @@ internal static class StartupExtensions
                         PrepareSchemaIfNecessary = true
                     }
                 );
-                
+
                 hangfireConfiguration.UseConsole();
-                
+
                 hangfireConfiguration.UseFilter(new AutomaticRetryAttribute {Attempts = 1});
                 hangfireConfiguration.UseFilter(new HangfireJobIdEnricher());
             }
         );
-        
+
         return builder;
     }
 }

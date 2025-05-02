@@ -1,4 +1,4 @@
-﻿namespace WebApi.Infrastructure.Database;
+﻿namespace WebApi.Database;
 
 internal static class Annotations
 {

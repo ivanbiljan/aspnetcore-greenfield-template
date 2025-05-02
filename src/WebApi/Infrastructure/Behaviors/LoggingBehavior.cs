@@ -2,11 +2,14 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Claims;
 using Immediate.Handlers.Shared;
-using WebApi.Infrastructure.Exceptions;
 
 namespace WebApi.Infrastructure.Behaviors;
 
-[SuppressMessage("Maintainability", "CA1515:Consider making public types internal", Justification = "ImmediateHandlers require behaviors to be public to be discoverable")]
+[SuppressMessage(
+    "Maintainability",
+    "CA1515:Consider making public types internal",
+    Justification = "ImmediateHandlers require behaviors to be public to be discoverable"
+)]
 public sealed class LoggingBehavior<TRequest, TResponse>(
     IHttpContextAccessor httpContextAccessor,
     ILogger<LoggingBehavior<TRequest, TResponse>> logger

@@ -10,18 +10,18 @@ public static class EmbeddedResource
         {
             throw new ArgumentException("Path must not be empty", nameof(relativePath));
         }
-        
+
         var fullPath =
             $"{Assembly.GetExecutingAssembly().GetName().Name}.{relativePath.TrimStart('.').Replace(Path.DirectorySeparatorChar, '.').Replace(Path.AltDirectorySeparatorChar, '.')}";
-        
+
         using var manifestResource = Assembly.GetExecutingAssembly().GetManifestResourceStream(fullPath) ??
                                      throw new ArgumentException(
                                          "Requested resource does not exist",
                                          nameof(relativePath)
                                      );
-        
+
         using var streamReader = new StreamReader(manifestResource);
-        
+
         return streamReader.ReadToEnd();
     }
 }

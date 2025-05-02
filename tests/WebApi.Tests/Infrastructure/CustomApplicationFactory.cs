@@ -1,12 +1,12 @@
-﻿using WebApi.Infrastructure;
-using WebApi.Infrastructure.Logging;
-using WebApi.Infrastructure.Web;
-using Microsoft.AspNetCore.Mvc.Testing;
+﻿using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Testcontainers.PostgreSql;
-using WebApi.Infrastructure.Database;
+using WebApi.Database;
+using WebApi.Infrastructure;
+using WebApi.Infrastructure.Logging;
+using WebApi.Infrastructure.Web;
 
 namespace WebApi.Tests.Infrastructure;
 
@@ -18,13 +18,28 @@ internal sealed class CustomApplicationFactory : WebApplicationFactory<Program>,
         .WithUsername(PostgreSqlBuilder.DefaultUsername)
         .WithPassword(PostgreSqlBuilder.DefaultPassword)
         .Build();
-    
+
     public IServiceScope ServiceScope { get; private set; } = null!;
-    
+
+    public async Task InitializeAsync()
+    {
+        ServiceScope = Services.CreateScope();
+        await _postgreSqlContainer.StartAsync();
+
+        var dbContext = ServiceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        await dbContext.Database.EnsureCreatedAsync();
+    }
+
+    public new async Task DisposeAsync()
+    {
+        ServiceScope.Dispose();
+        await _postgreSqlContainer.DisposeAsync();
+        await base.DisposeAsync();
+    }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.ConfigureAppConfiguration(
-            configuration =>
+        builder.ConfigureAppConfiguration(configuration =>
             {
                 configuration.Sources.Clear();
                 configuration.SetBasePath(Directory.GetCurrentDirectory());
@@ -32,48 +47,30 @@ internal sealed class CustomApplicationFactory : WebApplicationFactory<Program>,
                 configuration.Build();
             }
         );
-        
-        builder.ConfigureTestServices(
-            services =>
+
+        builder.ConfigureTestServices(services =>
             {
                 var httpContextAccessorMock = new Mock<IHttpContextAccessor>();
                 httpContextAccessorMock.Setup(x => x.HttpContext).Returns(new DefaultHttpContext());
-                
+
                 services.Remove<IHttpContextAccessor>()
                     .AddSingleton(httpContextAccessorMock.Object);
-                
+
                 services
                     .Remove<DbContextOptions<ApplicationDbContext>>()
-                    .AddDbContext<ApplicationDbContext>(
-                        options =>
-                            options.UseNpgsql(_postgreSqlContainer.GetConnectionString())
+                    .AddDbContext<ApplicationDbContext>(options =>
+                        options.UseNpgsql(_postgreSqlContainer.GetConnectionString())
                     );
-                
+
                 services.AddSerilogInternal("WebApi");
                 services.ConfigureSerilogHttpLogging();
                 services.AddWebApiServices();
-                
+
                 var currentUserServiceMock = new Mock<ICurrentUserService>();
-                currentUserServiceMock.Setup(s => s.UserId).Returns("AdminId");
+                currentUserServiceMock.Setup(s => s.GetId()).Returns(1);
                 services.Remove<ICurrentUserService>()
                     .AddScoped<ICurrentUserService>(_ => currentUserServiceMock.Object);
             }
         );
-    }
-    
-    public async Task InitializeAsync()
-    {
-        ServiceScope = Services.CreateScope();
-        await _postgreSqlContainer.StartAsync();
-        
-        var dbContext = ServiceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        await dbContext.Database.EnsureCreatedAsync();
-    }
-    
-    public new async Task DisposeAsync()
-    {
-        ServiceScope.Dispose();
-        await _postgreSqlContainer.DisposeAsync();
-        await base.DisposeAsync();
     }
 }

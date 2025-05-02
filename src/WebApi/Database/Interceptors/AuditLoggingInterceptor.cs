@@ -1,12 +1,10 @@
 ﻿using System.Diagnostics;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using WebApi.Infrastructure.Database.Models;
 
-namespace WebApi.Infrastructure.Database.Interceptors;
+namespace WebApi.Database.Interceptors;
 
 internal sealed class AuditLoggingInterceptor(IHttpContextAccessor httpContextAccessor) : SaveChangesInterceptor
 {

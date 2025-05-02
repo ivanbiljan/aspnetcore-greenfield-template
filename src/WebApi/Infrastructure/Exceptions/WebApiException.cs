@@ -9,6 +9,6 @@ internal class WebApiException(int statusCode, string? message) : Exception(mess
     public WebApiException(string message) : this((int) HttpStatusCode.UnprocessableContent, message)
     {
     }
-    
+
     public int StatusCode { get; } = statusCode;
 }

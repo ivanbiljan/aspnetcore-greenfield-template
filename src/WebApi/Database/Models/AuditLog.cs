@@ -1,13 +1,12 @@
 ﻿using System.Text.Json;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace WebApi.Infrastructure.Database.Models;
+namespace WebApi.Database.Models;
 
 internal sealed class AuditLog : EntityBase<int>
 {
     private static readonly JsonDocument EmptyDocument = JsonDocument.Parse("{}");
-    
+
     public required string? Type { get; init; }
 
     public required string? TableName { get; init; }
@@ -21,13 +20,13 @@ internal sealed class AuditLog : EntityBase<int>
     public required JsonDocument PrimaryKey { get; init; } = EmptyDocument;
 
     public required string? Actor { get; init; }
-    
+
     public required string? RequestPath { get; init; }
-    
+
     public required string? TraceId { get; init; }
-    
+
     public required string? SpanId { get; init; }
-    
+
     public required JsonDocument ExtraProperties { get; init; } = EmptyDocument;
 }
 

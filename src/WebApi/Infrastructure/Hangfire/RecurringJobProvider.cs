@@ -14,7 +14,7 @@ internal static class RecurringJobProvider
     {
         ScheduleRecurringJobsForAssembly(Assembly.GetEntryAssembly()!, serviceProvider);
     }
-    
+
     /// <summary>
     ///     Scans the provided assembly for types derived from <see cref="IRecurringJob" /> and creates a
     ///     <see cref="RecurringJob" /> for each. Cron expressions are evaluated against UTC.
@@ -23,7 +23,7 @@ internal static class RecurringJobProvider
     {
         ArgumentNullException.ThrowIfNull(assembly);
         ArgumentNullException.ThrowIfNull(serviceProvider);
-        
+
         var recurringJobTypesFromEntryAssembly = assembly
             .GetTypes()
             .Where(x => !x.IsAbstract)
@@ -31,9 +31,9 @@ internal static class RecurringJobProvider
             .Where(x => x.IsClass)
             .Where(x => typeof(IRecurringJob).IsAssignableFrom(x))
             .ToList();
-        
+
         var recurringJobManager = serviceProvider.GetRequiredService<IRecurringJobManager>();
-        
+
         using var serviceScope = serviceProvider.CreateScope();
         foreach (var jobHandler in recurringJobTypesFromEntryAssembly)
         {
@@ -41,7 +41,7 @@ internal static class RecurringJobProvider
                 serviceScope.ServiceProvider,
                 jobHandler
             );
-            
+
             // Provide null for the PerformContext and Hangfire fills it with the correct context when executing it
             recurringJobManager.AddOrUpdate(
                 job.JobId,

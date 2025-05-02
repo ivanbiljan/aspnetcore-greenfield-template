@@ -1,12 +1,12 @@
 ﻿using System.Data.Common;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace WebApi.Infrastructure.Database.Interceptors;
+namespace WebApi.Database.Interceptors;
 
 internal sealed class SlowQueryLoggingInterceptor(ILogger<SlowQueryLoggingInterceptor> logger) : DbCommandInterceptor
 {
     private const int ThresholdInMilliseconds = 250;
-    
+
     private readonly ILogger<SlowQueryLoggingInterceptor> _logger = logger;
 
     /// <inheritdoc />

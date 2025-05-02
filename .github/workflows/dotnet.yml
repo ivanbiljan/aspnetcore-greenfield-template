@@ -11,19 +11,19 @@ jobs:
         runs-on: ubuntu-latest
         
         steps:
-            - uses: actions/checkout@v3
+            -   uses: actions/checkout@v3
 
-            - name: Setup .NET
-              uses: actions/setup-dotnet@v3
-              with:
-                  dotnet-version: 8.0.x
+            -   name: Setup .NET
+                uses: actions/setup-dotnet@v3
+                with:
+                    dotnet-version: 8.0.x
 
-            - name: Restore
-              run: dotnet restore ./Greenfield.sln
+            -   name: Restore
+                run: dotnet restore ./Greenfield.sln
 
-            - name: Build
-              run: dotnet build ./Greenfield.sln --no-restore
+            -   name: Build
+                run: dotnet build ./Greenfield.sln --no-restore
 
-            - name: Test
-              run: dotnet test ./Greenfield.sln --no-build
+            -   name: Test
+                run: dotnet test ./Greenfield.sln --no-build
         

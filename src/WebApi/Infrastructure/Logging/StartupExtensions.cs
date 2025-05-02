@@ -7,7 +7,6 @@ using Serilog.AspNetCore;
 using Serilog.Events;
 using Serilog.Exceptions;
 using Serilog.Exceptions.Core;
-using Serilog.Exceptions.Destructurers;
 using Serilog.Exceptions.EntityFrameworkCore.Destructurers;
 using Serilog.Exceptions.Refit.Destructurers;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -48,7 +47,7 @@ internal static class StartupExtensions
         "X-Amzn-Trace-Id",
         "X-Forwarded-For"
     };
-    
+
     private static readonly HashSet<string> ResponseHeaders = new(StringComparer.OrdinalIgnoreCase)
     {
         HeaderNames.AcceptRanges,
@@ -71,7 +70,7 @@ internal static class StartupExtensions
         HeaderNames.Upgrade,
         HeaderNames.XPoweredBy
     };
-    
+
     /// <summary>
     ///     Sets Serilog as the default logging provider and configures its enrichers and sinks.
     /// </summary>
@@ -81,15 +80,14 @@ internal static class StartupExtensions
     public static IServiceCollection AddSerilogInternal(this IServiceCollection services, string projectName)
     {
         ArgumentNullException.ThrowIfNull(services);
-        
-        return services.AddSerilog(
-            (_, loggerConfiguration) =>
+
+        return services.AddSerilog((_, loggerConfiguration) =>
             {
                 loggerConfiguration.MinimumLevel.Information();
                 loggerConfiguration.MinimumLevel.Override("Microsoft", LogEventLevel.Warning);
                 loggerConfiguration.MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information);
                 loggerConfiguration.MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Information);
-                
+
                 loggerConfiguration.Enrich.FromLogContext();
                 loggerConfiguration.Enrich.WithMachineName();
                 loggerConfiguration.Enrich.WithEnvironmentName();
@@ -102,9 +100,9 @@ internal static class StartupExtensions
                         [new ApiExceptionDestructurer(), new DbUpdateExceptionDestructurer()]
                     )
                 );
-                
+
                 loggerConfiguration.Destructure.UsingAttributes();
-                
+
                 loggerConfiguration.WriteTo.Console(
                     theme: AnsiConsoleTheme.Code,
                     formatProvider: CultureInfo.InvariantCulture
@@ -112,7 +110,7 @@ internal static class StartupExtensions
             }
         );
     }
-    
+
     /// <summary>
     ///     Configures Serilog's request logging middleware. Enriches the diagnostic context with the protocol, scheme and
     ///     request headers.
@@ -122,31 +120,30 @@ internal static class StartupExtensions
     public static IServiceCollection ConfigureSerilogHttpLogging(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
-        
-        services.Configure<RequestLoggingOptions>(
-            options =>
+
+        services.Configure<RequestLoggingOptions>(options =>
             {
                 options.EnrichDiagnosticContext = (context, httpContext) =>
                 {
                     context.Set("RequestProtocol", httpContext.Request.Protocol);
                     context.Set("RequestScheme", httpContext.Request.Scheme);
-                    
+
                     context.Set(
                         "RequestHeaders",
                         httpContext.Request.Headers.Where(h => RequestHeaders.Contains(h.Key))
                     );
-                    
+
                     context.Set(
                         "ResponseHeaders",
                         httpContext.Response.Headers.Where(h => ResponseHeaders.Contains(h.Key))
                     );
-                    
+
                     context.Set("User", httpContext.User.Identity?.Name ?? "Anonymous");
                     context.Set("RemoteIP", httpContext.Connection.RemoteIpAddress?.MapToIPv4() ?? IPAddress.Any);
                 };
             }
         );
-        
+
         return services;
     }
 }

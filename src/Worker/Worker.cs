@@ -7,7 +7,7 @@ internal sealed class Worker(IServiceProvider serviceProvider) : BackgroundServi
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
         RecurringJobProvider.ScheduleRecurringJobsForCurrentAssembly(serviceProvider);
-        
+
         return Task.CompletedTask;
     }
 }

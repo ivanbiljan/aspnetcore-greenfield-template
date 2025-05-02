@@ -1,11 +1,8 @@
-using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
-using WebApi.Infrastructure;
-using WebApi.Infrastructure.Hangfire;
-using WebApi.Infrastructure.Logging;
 using Hellang.Middleware.ProblemDetails;
 using Hellang.Middleware.ProblemDetails.Mvc;
 using Immediate.Handlers.Shared;
@@ -13,8 +10,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using WebApi.Infrastructure;
 using WebApi.Infrastructure.Behaviors;
-using WebApi.Infrastructure.Database;
+using WebApi.Infrastructure.Hangfire;
+using WebApi.Infrastructure.Logging;
 using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 using ProblemDetailsMiddleware = WebApi.Infrastructure.Web.ProblemDetailsMiddleware;
 
@@ -29,42 +28,40 @@ Log.Logger = new LoggerConfiguration()
 try
 {
     var builder = WebApplication.CreateBuilder(args);
-    
-    builder.Services.Configure<ApiBehaviorOptions>(
-        options =>
+
+    builder.Services.Configure<ApiBehaviorOptions>(options =>
         {
             options.SuppressInferBindingSourcesForParameters = true;
         }
     );
-    
-    builder.Services.Configure<JsonOptions>(
-        options =>
+
+    builder.Services.Configure<JsonOptions>(options =>
         {
             options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
         }
     );
-    
+
     builder.Services.AddControllers();
-    
+
     builder.Services.AddAuthorizationBuilder()
         .SetFallbackPolicy(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
-    
+
     builder.Services.AddProblemDetails(ProblemDetailsMiddleware.ConfigureProblemDetails);
     builder.Services.AddProblemDetailsConventions();
-    
+
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
-    
+
     builder.AddEntityFramework();
     builder.AddHangfireInternal();
     builder.Services.AddSerilogInternal("Api");
     builder.Services.ConfigureSerilogHttpLogging();
     builder.Services.AddWebApiServices();
-    
+
     var app = builder.Build();
-    
+
     app.UseSerilogRequestLogging();
-    
+
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
@@ -74,17 +71,17 @@ try
     {
         app.UseHsts();
     }
-    
+
     app.UseHttpsRedirection();
     app.UseProblemDetails();
-    
+
     app.UseRouting();
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
-    
+
     app.MapIdentityApi<IdentityUser>();
-    
+
     await app.RunAsync();
 }
 catch (Exception ex) when (ex is not HostAbortedException)
@@ -102,6 +99,10 @@ finally
 
 namespace WebApi
 {
-    [SuppressMessage("Maintainability", "CA1515:Consider making public types internal", Justification = "ImmediateHandlers require behaviors to be public to be discoverable")]
+    [SuppressMessage(
+        "Maintainability",
+        "CA1515:Consider making public types internal",
+        Justification = "ImmediateHandlers require behaviors to be public to be discoverable"
+    )]
     public class Program;
 }

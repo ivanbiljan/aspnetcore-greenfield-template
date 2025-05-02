@@ -6,37 +6,39 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoRegisterInject" />
+        <PackageReference Include="AutoRegisterInject"/>
         <PackageReference Include="Destructurama.Attributed"/>
-        <PackageReference Include="EFCore.NamingConventions" />
-        <PackageReference Include="EntityFrameworkCore.Exceptions.PostgreSQL" />
+        <PackageReference Include="EFCore.NamingConventions"/>
+        <PackageReference Include="EntityFrameworkCore.Exceptions.PostgreSQL"/>
         <PackageReference Include="Hangfire"/>
         <PackageReference Include="Hangfire.Console"/>
         <PackageReference Include="Hangfire.PostgreSql"/>
         <PackageReference Include="Hellang.Middleware.ProblemDetails"/>
-        <PackageReference Include="Immediate.Apis" />
-        <PackageReference Include="Immediate.Handlers" />
+        <PackageReference Include="Immediate.Apis"/>
+        <PackageReference Include="Immediate.Handlers"/>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens"/>
         <PackageReference Include="Microsoft.SourceLink.GitHub">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="NodaTime"/>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"/>
         <PackageReference Include="Serilog"/>
         <PackageReference Include="Serilog.AspNetCore"/>
         <PackageReference Include="Serilog.Enrichers.Environment"/>
-        <PackageReference Include="Serilog.Exceptions.EntityFrameworkCore" />
+        <PackageReference Include="Serilog.Exceptions.EntityFrameworkCore"/>
         <PackageReference Include="Serilog.Exceptions.Refit"/>
         <PackageReference Include="Swashbuckle.AspNetCore"/>
         <PackageReference Include="FluentValidation"/>
         <PackageReference Include="ThisAssembly.Git">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
 
@@ -47,7 +49,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SourceGenerators\SourceGenerators.csproj" OutputItemType="Analyzer" />
+        <ProjectReference Include="..\SourceGenerators\SourceGenerators.csproj" OutputItemType="Analyzer"/>
     </ItemGroup>
 
 </Project>
