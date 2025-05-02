@@ -1,4 +1,5 @@
 ﻿using Immediate.Handlers.Shared;
+using WebApi.Infrastructure.Database;
 
 namespace WebApi.Tests.Infrastructure;
 

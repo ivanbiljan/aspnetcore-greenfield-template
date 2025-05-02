@@ -1,4 +1,4 @@
-﻿namespace WebApi.Infrastructure.Persistence.Models;
+﻿namespace WebApi.Infrastructure.Database.Models;
 
 /// <summary>
 ///     Represents a marker interface for soft-deletable entities.

@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using WebApi.Infrastructure.Persistence.Models;
+using WebApi.Infrastructure.Database.Models;
 
-namespace WebApi.Infrastructure.Persistence.Interceptors;
+namespace WebApi.Infrastructure.Database.Interceptors;
 
 /// <summary>
 ///     Represents an interceptor that provides soft-delete functionality to <see cref="IArchivable" /> entities.

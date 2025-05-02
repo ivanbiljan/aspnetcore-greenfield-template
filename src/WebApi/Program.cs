@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using WebApi.Infrastructure.Behaviors;
+using WebApi.Infrastructure.Database;
 using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 using ProblemDetailsMiddleware = WebApi.Infrastructure.Web.ProblemDetailsMiddleware;
 

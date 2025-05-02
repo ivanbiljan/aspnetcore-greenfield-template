@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using WebApi.Infrastructure.Database;
 
 namespace WebApi.Infrastructure;
 

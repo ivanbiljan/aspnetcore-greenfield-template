@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Testcontainers.PostgreSql;
+using WebApi.Infrastructure.Database;
 
 namespace WebApi.Tests.Infrastructure;
 

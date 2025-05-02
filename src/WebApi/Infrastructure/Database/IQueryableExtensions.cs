@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace WebApi.Infrastructure.Persistence;
+namespace WebApi.Infrastructure.Database;
 
 /// <summary>
 ///     Provides extension methods for the <see cref="IQueryable" /> type.

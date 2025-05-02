@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace WebApi.Infrastructure.Persistence;
+namespace WebApi.Infrastructure.Database;
 
 internal static class StartupExtensions
 {
