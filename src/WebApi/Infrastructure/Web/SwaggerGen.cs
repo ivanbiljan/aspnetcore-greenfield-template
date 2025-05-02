@@ -17,7 +17,9 @@ internal static class SwaggerGen
             {
                 options.OperationFilter<AuthorizationDescriptionOperationFilter>();
 
-                options.CustomSchemaIds(t => t.FullName?.Replace('+', '.'));
+                options.CustomSchemaIds(t =>
+                    $"{t.DeclaringType!.Namespace!.Split('.')[^1]}.{t.DeclaringType.Name}.{t.Name}"
+                );
 
                 options.AddSecurityDefinition(
                     "Bearer",

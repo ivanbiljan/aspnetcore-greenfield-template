@@ -30,6 +30,8 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
+    builder.Configuration.AddJsonFile("secrets.json", optional: true);
+
     builder.Services.Configure<ApiBehaviorOptions>(options =>
         {
             options.SuppressInferBindingSourcesForParameters = true;

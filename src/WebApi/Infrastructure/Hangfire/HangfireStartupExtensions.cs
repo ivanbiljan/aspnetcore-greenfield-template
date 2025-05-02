@@ -7,7 +7,7 @@ using WebApi.Infrastructure.Hangfire.Filters;
 
 namespace WebApi.Infrastructure.Hangfire;
 
-internal static class StartupExtensions
+internal static class HangfireStartupExtensions
 {
     [SuppressMessage("Security", "CA2326:Do not use TypeNameHandling values other than None")]
     public static IHostApplicationBuilder AddHangfireInternal(this IHostApplicationBuilder builder)

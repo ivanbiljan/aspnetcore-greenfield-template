@@ -36,6 +36,7 @@
         <PackageReference Include="Serilog.Enrichers.Environment"/>
         <PackageReference Include="Serilog.Exceptions.EntityFrameworkCore"/>
         <PackageReference Include="Serilog.Exceptions.Refit"/>
+        <PackageReference Include="Serilog.Sinks.Seq" />
         <PackageReference Include="Swashbuckle.AspNetCore"/>
         <PackageReference Include="FluentValidation"/>
         <PackageReference Include="ThisAssembly.Git">

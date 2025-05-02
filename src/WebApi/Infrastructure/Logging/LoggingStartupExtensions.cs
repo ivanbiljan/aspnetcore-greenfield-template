@@ -14,7 +14,7 @@ using WebApi.Infrastructure.Hangfire.Filters;
 
 namespace WebApi.Infrastructure.Logging;
 
-internal static class StartupExtensions
+internal static class LoggingStartupExtensions
 {
     private static readonly HashSet<string> RequestHeaders = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -116,6 +116,13 @@ internal static class StartupExtensions
                     theme: AnsiConsoleTheme.Code,
                     formatProvider: CultureInfo.InvariantCulture
                 );
+                
+#if DEBUG
+                loggerConfiguration.WriteTo.Seq(
+                    "http://localhost:5341",
+                    formatProvider: CultureInfo.InvariantCulture
+                );
+#endif
             }
         );
     }

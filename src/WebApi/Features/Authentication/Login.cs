@@ -25,31 +25,34 @@ internal static partial class Login
             .Where(a => a.Email == command.Email)
             .SingleOrDefaultAsync(cancellationToken) ?? throw new NotFoundException("Invalid email or password");
 
-        if (!user.EmailConfirmedAtUtc.HasValue)
+        using (logger.BeginScope(("User", user.Id)))
         {
-            logger.LogInformation("Login denied because email has not been confirmed");
+            if (!user.EmailConfirmedAtUtc.HasValue)
+            {
+                logger.LogInformation("Login denied because email has not been confirmed");
 
-            throw new NotFoundException("Invalid email or password");
+                throw new NotFoundException("Invalid email or password");
+            }
+
+            if (passwordHasher.VerifyHashedPassword(null!, user.Password!, command.Password) is not
+                PasswordVerificationResult.Success)
+            {
+                logger.LogInformation("Login denied due to invalid credentials");
+
+                throw new NotFoundException("Invalid email or password");
+            }
+
+            var accessToken = await accessTokenManager.CreateAccessToken(user.Id, cancellationToken);
+
+            await context.SaveChangesAsync(cancellationToken);
+
+            return new Response
+            {
+                AccessToken = accessToken.AccessToken,
+                ExpiresAtUtc = (long) accessToken.ExpiresAtUtc.Subtract(DateTime.UnixEpoch).TotalSeconds,
+                RefreshToken = accessToken.RefreshToken
+            };
         }
-
-        if (passwordHasher.VerifyHashedPassword(null!, user.Password!, command.Password) is not
-            PasswordVerificationResult.Success)
-        {
-            logger.LogInformation("Login denied due to invalid credentials");
-
-            throw new NotFoundException("Invalid email or password");
-        }
-
-        var accessToken = await accessTokenManager.CreateAccessToken(user.Id, cancellationToken);
-
-        await context.SaveChangesAsync(cancellationToken);
-
-        return new Response
-        {
-            AccessToken = accessToken.AccessToken,
-            ExpiresAtUtc = (long) accessToken.ExpiresAtUtc.Subtract(DateTime.UnixEpoch).TotalSeconds,
-            RefreshToken = accessToken.RefreshToken
-        };
     }
 
     internal sealed record Command

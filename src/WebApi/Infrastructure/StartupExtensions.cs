@@ -19,6 +19,8 @@ internal static class StartupExtensions
         services
             .TryAddSingleton<IStringLocalizerWithCultureFactory, ResourceManagerStringLocalizerWithCultureFactory>();
 
+        services.AddHttpContextAccessor();
+
         services.AddWebApiBehaviors();
         services.AddWebApiHandlers();
 
