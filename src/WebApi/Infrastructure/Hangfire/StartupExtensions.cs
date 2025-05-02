@@ -14,7 +14,7 @@ internal static class StartupExtensions
     {
         ArgumentNullException.ThrowIfNull(builder);
 
-        builder.Services.AddHangfire(hangfireConfiguration =>
+        builder.Services.AddHangfire((provider, hangfireConfiguration) =>
             {
                 var serializationSettings = new JsonSerializerSettings
                 {
@@ -35,6 +35,7 @@ internal static class StartupExtensions
 
                 hangfireConfiguration.UseConsole();
 
+                hangfireConfiguration.UseFilter(new EnvironmentFilter(provider.GetRequiredService<IHostEnvironment>()));
                 hangfireConfiguration.UseFilter(new AutomaticRetryAttribute {Attempts = 1});
                 hangfireConfiguration.UseFilter(new HangfireJobIdEnricher());
                 hangfireConfiguration.UseFilter(new AuditLogJobContextEnricher());
