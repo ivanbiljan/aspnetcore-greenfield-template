@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <TargetFramework>net9.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
@@ -12,7 +13,8 @@
         <PackageReference Include="Hangfire.Console"/>
         <PackageReference Include="Hangfire.PostgreSql"/>
         <PackageReference Include="Hellang.Middleware.ProblemDetails"/>
-        <PackageReference Include="MediatR"/>
+        <PackageReference Include="Immediate.Apis" />
+        <PackageReference Include="Immediate.Handlers" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"/>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore"/>

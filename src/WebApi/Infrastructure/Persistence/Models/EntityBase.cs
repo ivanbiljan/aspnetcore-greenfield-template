@@ -1,6 +1,6 @@
 ﻿namespace WebApi.Infrastructure.Persistence.Models;
 
-public abstract class EntityBase<TKey>
+internal abstract class EntityBase<TKey>
 {
     public TKey Id { get; init; } = default!;
     

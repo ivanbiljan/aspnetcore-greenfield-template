@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace WebApi.Infrastructure.Persistence;
 
-public static class StartupExtensions
+internal static class StartupExtensions
 {
     public static IHostApplicationBuilder AddEntityFramework(this IHostApplicationBuilder builder)
     {

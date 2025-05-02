@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0C5408BD
 		tests\Directory.Build.props = tests\Directory.Build.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HangfireWorker", "src\HangfireWorker\HangfireWorker.csproj", "{1C2EE17A-5794-4394-BD4E-5F4F30505F64}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Worker", "src\Worker\Worker.csproj", "{1C2EE17A-5794-4394-BD4E-5F4F30505F64}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{84FB38A6-7531-4846-AFC9-4BCC07191C92}"
 	ProjectSection(SolutionItems) = preProject

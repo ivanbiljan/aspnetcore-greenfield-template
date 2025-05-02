@@ -5,7 +5,7 @@ namespace WebApi.Infrastructure.Hangfire;
 /// <summary>
 ///     Describes a Hangfire job that is scheduled to run on a regular basis as dictated by its cron expression.
 /// </summary>
-public interface IRecurringJob
+internal interface IRecurringJob
 {
     /// <summary>
     ///     Gets a cron expression that defines how often the job is executed.

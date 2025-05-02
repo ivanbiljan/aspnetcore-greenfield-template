@@ -9,7 +9,7 @@ new ServiceCollection().AutoConfigureOptions();
 namespace SourceGenerators.IntegrationTests
 {
     [ConfigureOptions("Email")]
-    public sealed class EmailOptions
+    internal sealed class EmailOptions
     {
     }
 }

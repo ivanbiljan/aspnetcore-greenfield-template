@@ -1,60 +1,71 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
-using MediatR;
-using Microsoft.AspNetCore.Identity;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
+using Immediate.Handlers.Shared;
+using WebApi.Infrastructure.Exceptions;
 
 namespace WebApi.Infrastructure.Behaviors;
 
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses", Justification = "Implicitly invoked by MediatR")]
-internal sealed class LoggingBehavior<TRequest, TResponse>(
+[SuppressMessage("Maintainability", "CA1515:Consider making public types internal", Justification = "ImmediateHandlers require behaviors to be public to be discoverable")]
+public sealed class LoggingBehavior<TRequest, TResponse>(
     IHttpContextAccessor httpContextAccessor,
-    UserManager<IdentityUser> userManager,
-    ILogger logger
-) : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
+    ILogger<LoggingBehavior<TRequest, TResponse>> logger
+) : Behavior<TRequest, TResponse>
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
-    private readonly UserManager<IdentityUser> _userManager = userManager;
-    private ILogger _logger = logger.ForContext<LoggingBehavior<TRequest, TResponse>>();
-    
-    public async Task<TResponse> Handle(
-        TRequest request,
-        RequestHandlerDelegate<TResponse> next,
-        CancellationToken cancellationToken
-    )
+    private readonly ILogger<LoggingBehavior<TRequest, TResponse>> _logger = logger;
+
+    /// <inheritdoc />
+    public override async ValueTask<TResponse> HandleAsync(TRequest request, CancellationToken cancellationToken)
     {
-        _logger = logger.ForContext("Request", request, true);
-        var httpContext = _httpContextAccessor.HttpContext;
-        if (httpContext is not null)
+        var logContext = new Dictionary<string, object?>
         {
-            _logger = logger.ForContext("RequestMethod", httpContext.Request.Method)
-                .ForContext("RequestPath", httpContext.Request.Path.ToString())
-                .ForContext("User", _userManager.GetUserId(httpContext.User))
-                .ForContext("RemoteIP", httpContext.Connection.RemoteIpAddress);
-        }
-        
-        var requestType = typeof(TRequest);
-        var handlerName = requestType.DeclaringType?.FullName ?? requestType.FullName!;
-        
-        try
+            ["@Request"] = request
+        };
+
+        using (_logger.BeginScope(logContext))
         {
-            var stopwatch = Stopwatch.StartNew();
-            var response = await next();
-            stopwatch.Stop();
-            
-            _logger.ForContext("Response", response, true)
-                .Information(
-                    "{Handler} executed in {ElapsedTime:000} ms",
+            var httpContext = _httpContextAccessor.HttpContext;
+            if (httpContext is not null)
+            {
+                logContext["RequestMethod"] = httpContext.Request.Method;
+                logContext["RequestPath"] = httpContext.Request.Path.ToString();
+                logContext["User"] = httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                logContext["RemoteIP"] = httpContext.Connection.RemoteIpAddress;
+            }
+
+            var requestType = typeof(TRequest);
+            var handlerName = requestType.DeclaringType?.FullName ?? requestType.FullName!;
+
+            try
+            {
+                var stopwatch = Stopwatch.StartNew();
+                var response = await Next(request, cancellationToken);
+                stopwatch.Stop();
+
+                logContext["@Response"] = response;
+
+                _logger.LogInformation(
+                    "{Handler} executed in {ElapsedTime} ms",
                     handlerName,
-                    stopwatch.Elapsed.TotalMilliseconds
+                    stopwatch.Elapsed.Milliseconds
                 );
-            
-            return response;
-        }
-        catch (Exception ex) when (ex is not ApplicationException and not ValidationException)
-        {
-            _logger.Error(ex, "{Handler} returned an exception", handlerName);
-            
-            throw;
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                if (ex is WebApiException)
+                {
+                    _logger.LogInformation("{Handler} returned an error: {Message}", handlerName, ex.Message);
+                }
+                else
+                {
+                    _logger.LogError(ex, "{Handler} returned an exception", handlerName);
+                }
+
+                throw;
+            }
         }
     }
 }

@@ -1,14 +1,10 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Identity;
-using SourceGenerators;
-using WebApi.Infrastructure.Behaviors;
-using WebApi.Infrastructure.Persistence;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace WebApi.Infrastructure;
 
-public static class StartupExtensions
+internal static class StartupExtensions
 {
-    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+    public static IServiceCollection AddWebApiServices(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
         
@@ -27,18 +23,8 @@ public static class StartupExtensions
             .AddDefaultTokenProviders()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddApiEndpoints();
-        
+
         services.AddSingleton(_ => TimeProvider.System);
-        
-        services.AddMediatR(
-            options =>
-            {
-                options.RegisterServicesFromAssemblyContaining<Program>();
-                
-                options.AddBehavior(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
-                options.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-            }
-        );
         
         return services;
     }

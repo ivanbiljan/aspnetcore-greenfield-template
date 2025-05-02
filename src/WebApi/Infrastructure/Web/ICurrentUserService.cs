@@ -2,7 +2,7 @@
 
 namespace WebApi.Infrastructure.Web;
 
-public interface ICurrentUserService
+internal interface ICurrentUserService
 {
     string UserId { get; }
 }

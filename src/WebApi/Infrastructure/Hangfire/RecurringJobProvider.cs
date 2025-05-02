@@ -4,7 +4,7 @@ using Hangfire.Common;
 
 namespace WebApi.Infrastructure.Hangfire;
 
-public static class RecurringJobProvider
+internal static class RecurringJobProvider
 {
     /// <summary>
     ///     Scans the entry assembly for types derived from <see cref="IRecurringJob" /> and creates a

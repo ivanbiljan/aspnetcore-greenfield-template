@@ -3,9 +3,9 @@
 /// <summary>
 ///     Represents a job queue.
 /// </summary>
-#pragma warning disable CA1711
-public sealed record HangfireQueue
-#pragma warning restore CA1711
+#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
+internal sealed record HangfireQueue
+#pragma warning restore CA1711 // Identifiers should not have incorrect suffix
 {
     /// <summary>
     ///     Gets the priority queue. Jobs placed in this queue are processed first.

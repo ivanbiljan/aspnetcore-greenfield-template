@@ -1,18 +1,25 @@
+using System.Runtime.CompilerServices;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.Json.Serialization;
 using WebApi.Infrastructure;
 using WebApi.Infrastructure.Hangfire;
 using WebApi.Infrastructure.Logging;
-using WebApi.Infrastructure.Persistence;
 using Hellang.Middleware.ProblemDetails;
 using Hellang.Middleware.ProblemDetails.Mvc;
+using Immediate.Handlers.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
+using WebApi.Infrastructure.Behaviors;
 using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 using ProblemDetailsMiddleware = WebApi.Infrastructure.Web.ProblemDetailsMiddleware;
+
+[assembly: InternalsVisibleTo("Worker")]
+[assembly: InternalsVisibleTo("WebApi.Tests")]
+[assembly: Behaviors(typeof(LoggingBehavior<,>), typeof(ValidationBehavior<,>))]
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console(formatProvider: CultureInfo.InvariantCulture)
@@ -51,7 +58,7 @@ try
     builder.AddHangfireInternal();
     builder.Services.AddSerilogInternal("Api");
     builder.Services.ConfigureSerilogHttpLogging();
-    builder.Services.AddApplicationServices();
+    builder.Services.AddWebApiServices();
     
     var app = builder.Build();
     
@@ -94,5 +101,6 @@ finally
 
 namespace WebApi
 {
+    [SuppressMessage("Maintainability", "CA1515:Consider making public types internal", Justification = "ImmediateHandlers require behaviors to be public to be discoverable")]
     public class Program;
 }

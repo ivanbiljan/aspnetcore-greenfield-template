@@ -11,7 +11,7 @@ namespace WebApi.Infrastructure.Hangfire.Filters;
 ///     Represents an <see cref="IServerFilter" /> that prevents executing the annotated job if one with the same
 ///     parameters is already running.
 /// </summary>
-public sealed class DisableMultipleQueuedItemsAttribute : JobFilterAttribute, IServerFilter
+internal sealed class DisableMultipleQueuedItemsAttribute : JobFilterAttribute, IServerFilter
 {
     private const string MetadataKey = "Metadata";
     private static readonly TimeSpan LockTimeout = TimeSpan.FromSeconds(10);
@@ -84,10 +84,7 @@ public sealed class DisableMultipleQueuedItemsAttribute : JobFilterAttribute, IS
     private static string GetSha256(string data)
     {
         var hash = SHA256.HashData(Encoding.UTF8.GetBytes(data));
-        var calculatedSignature = BitConverter
-            .ToString(hash)
-            .Replace("-", string.Empty, StringComparison.Ordinal)
-            .ToUpperInvariant();
+        var calculatedSignature = Convert.ToHexString(hash).ToUpperInvariant();
         
         return calculatedSignature;
     }

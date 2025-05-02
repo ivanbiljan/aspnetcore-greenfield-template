@@ -6,7 +6,7 @@ namespace WebApi.Infrastructure.Persistence;
 ///     Provides extension methods for the <see cref="IQueryable" /> type.
 /// </summary>
 // ReSharper disable once InconsistentNaming
-public static class IQueryableExtensions
+internal static class IQueryableExtensions
 {
     /// <summary>
     ///     Conditionally filters a sequence based on the provided predicate.

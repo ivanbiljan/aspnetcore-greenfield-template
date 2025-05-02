@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Net;
 using Destructurama;
 using Microsoft.Net.Http.Headers;
 using Serilog;
@@ -14,7 +15,7 @@ using WebApi.Infrastructure.Hangfire.Filters;
 
 namespace WebApi.Infrastructure.Logging;
 
-public static class StartupExtensions
+internal static class StartupExtensions
 {
     private static readonly HashSet<string> RequestHeaders = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -140,8 +141,8 @@ public static class StartupExtensions
                         httpContext.Response.Headers.Where(h => ResponseHeaders.Contains(h.Key))
                     );
                     
-                    context.Set("User", httpContext.User.Identity?.Name);
-                    context.Set("RemoteIP", httpContext.Connection.RemoteIpAddress?.MapToIPv4());
+                    context.Set("User", httpContext.User.Identity?.Name ?? "Anonymous");
+                    context.Set("RemoteIP", httpContext.Connection.RemoteIpAddress?.MapToIPv4() ?? IPAddress.Any);
                 };
             }
         );

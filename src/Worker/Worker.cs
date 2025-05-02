@@ -1,8 +1,8 @@
 using WebApi.Infrastructure.Hangfire;
 
-namespace HangfireWorker;
+namespace Worker;
 
-public class Worker(IServiceProvider serviceProvider) : BackgroundService
+internal sealed class Worker(IServiceProvider serviceProvider) : BackgroundService
 {
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {

@@ -3,20 +3,19 @@ using WebApi.Infrastructure.Hangfire;
 using WebApi.Infrastructure.Logging;
 using WebApi.Infrastructure.Persistence;
 using Hangfire;
-using HangfireWorker;
 
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.AddEntityFramework();
-builder.Services.AddSerilogInternal("HangfireWorker");
-builder.Services.AddApplicationServices();
+builder.Services.AddSerilogInternal("Worker");
+builder.Services.AddWebApiServices();
 
 builder.AddHangfireInternal();
 builder.Services.AddHangfireServer(
     options => { options.Queues = HangfireQueue.GetAll(); }
 );
 
-builder.Services.AddHostedService<Worker>();
+builder.Services.AddHostedService<Worker.Worker>();
 
 var host = builder.Build();
 host.Run();

@@ -3,6 +3,7 @@
     <PropertyGroup>
         <UserSecretsId>dotnet-HangfireWorker-9E69BD55-92D6-4191-860F-7DDA46B7069A</UserSecretsId>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <TargetFramework>net9.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>

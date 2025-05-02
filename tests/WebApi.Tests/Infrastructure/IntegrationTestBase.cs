@@ -1,25 +1,18 @@
-﻿using MediatR;
+﻿using Immediate.Handlers.Shared;
 
 namespace WebApi.Tests.Infrastructure;
 
 [Collection(IntegrationTestCollectionContainer.FixtureName)]
-public abstract class IntegrationTestBase(CustomApplicationFactory factory)
+internal abstract class IntegrationTestBase(CustomApplicationFactory factory)
 {
     protected CustomApplicationFactory Factory { get; } = factory;
     
     protected ApplicationDbContext DbContext => GetService<ApplicationDbContext>();
     
-    public async Task<TResponse> Send<TResponse>(IRequest<TResponse> request)
+    public async Task<TResponse> Send<TRequest, TResponse>(TRequest request)
     {
-        var sender = GetService<ISender>();
-        
-        return await sender.Send(request);
-    }
-    
-    public async Task Send(IRequest request)
-    {
-        var sender = GetService<ISender>();
-        await sender.Send(request);
+        var sender = GetService<IHandler<TRequest, TResponse>>();
+        return await sender.HandleAsync(request);
     }
     
     public TService GetService<TService>() where TService : notnull

@@ -9,7 +9,7 @@ using Testcontainers.PostgreSql;
 
 namespace WebApi.Tests.Infrastructure;
 
-public sealed class CustomApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
+internal sealed class CustomApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
     private readonly PostgreSqlContainer _postgreSqlContainer = new PostgreSqlBuilder()
         .WithImage(PostgreSqlBuilder.PostgreSqlImage)
@@ -50,7 +50,7 @@ public sealed class CustomApplicationFactory : WebApplicationFactory<Program>, I
                 
                 services.AddSerilogInternal("WebApi");
                 services.ConfigureSerilogHttpLogging();
-                services.AddApplicationServices();
+                services.AddWebApiServices();
                 
                 var currentUserServiceMock = new Mock<ICurrentUserService>();
                 currentUserServiceMock.Setup(s => s.UserId).Returns("AdminId");
