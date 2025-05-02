@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using WebApi.Infrastructure.Database.Interceptors;
 
 namespace WebApi.Infrastructure.Database;
 
@@ -10,9 +11,11 @@ internal static class StartupExtensions
         ArgumentNullException.ThrowIfNull(builder);
         
         var connectionString = builder.Configuration.GetConnectionString("Npgsql");
+
+        builder.Services.AddSingleton<SlowQueryLoggingInterceptor>();
         
         builder.Services.AddDbContext<ApplicationDbContext>(
-            options =>
+            (provider, options) =>
             {
                 options.EnableDetailedErrors();
                 if (builder.Environment.IsDevelopment())
@@ -39,6 +42,8 @@ internal static class StartupExtensions
                         }
                     )
                     .UseSnakeCaseNamingConvention();
+
+                options.AddInterceptors(provider.GetRequiredService<SlowQueryLoggingInterceptor>());
             }
         );
         
