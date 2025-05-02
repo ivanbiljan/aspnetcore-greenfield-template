@@ -14,6 +14,7 @@ using WebApi.Infrastructure;
 using WebApi.Infrastructure.Behaviors;
 using WebApi.Infrastructure.Hangfire;
 using WebApi.Infrastructure.Logging;
+using WebApi.Infrastructure.Web;
 using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
 using ProblemDetailsMiddleware = WebApi.Infrastructure.Web.ProblemDetailsMiddleware;
 
@@ -50,7 +51,7 @@ try
     builder.Services.AddProblemDetailsConventions();
 
     builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
+    builder.Services.AddSwagger();
 
     builder.AddEntityFramework();
     builder.AddHangfireInternal();
