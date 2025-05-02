@@ -11,7 +11,7 @@ internal interface IRazorRenderer
 }
 
 [RegisterSingleton]
-public sealed class RazorRenderer : IRazorRenderer
+internal sealed class RazorRenderer : IRazorRenderer
 {
     private readonly RazorEngine _razorEngine = new();
 

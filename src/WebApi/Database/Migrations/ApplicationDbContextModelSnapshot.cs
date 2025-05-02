@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using WebApi.Database;
 using WebApi.Infrastructure.Database;
-using WebApi.Infrastructure.Database;
 
 #nullable disable
 
