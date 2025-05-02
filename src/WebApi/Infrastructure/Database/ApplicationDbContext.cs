@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace WebApi.Infrastructure.Database;
 
-internal sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext(options)
+internal sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
     /// <inheritdoc />
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
@@ -13,19 +12,14 @@ internal sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext
         base.ConfigureConventions(configurationBuilder);
         
         configurationBuilder.Conventions.Remove<TableNameFromDbSetConvention>();
+        configurationBuilder.Properties<Enum>().HaveConversion<string>();
+        configurationBuilder.Properties<decimal>().HavePrecision(18, 2);
     }
-    
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        
-        builder.Entity<IdentityUser>().ToTable("aspnet_web_user");
-        builder.Entity<IdentityRole>().ToTable("aspnet_web_role");
-        builder.Entity<IdentityRoleClaim<string>>().ToTable("aspnet_web_role_claim");
-        builder.Entity<IdentityUserClaim<string>>().ToTable("aspnet_web_user_claim");
-        builder.Entity<IdentityUserLogin<string>>().ToTable("aspnet_web_user_login");
-        builder.Entity<IdentityUserRole<string>>().ToTable("aspnet_web_user_role");
-        builder.Entity<IdentityUserToken<string>>().ToTable("aspnet_web_user_token");
+
+        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }

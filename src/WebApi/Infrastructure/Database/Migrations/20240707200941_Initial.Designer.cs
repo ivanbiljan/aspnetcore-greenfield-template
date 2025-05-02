@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using WebApi.Infrastructure.Persistence;
+using WebApi.Infrastructure.Database;
 
 #nullable disable
 
-namespace WebApi.Infrastructure.Persistence.Migrations
+namespace WebApi.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20240707200941_Initial")]

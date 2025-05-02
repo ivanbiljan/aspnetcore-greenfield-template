@@ -1,7 +1,6 @@
 using WebApi.Infrastructure;
 using WebApi.Infrastructure.Hangfire;
 using WebApi.Infrastructure.Logging;
-using WebApi.Infrastructure.Persistence;
 using Hangfire;
 using WebApi.Infrastructure.Database;
 

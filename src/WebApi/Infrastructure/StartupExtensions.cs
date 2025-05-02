@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using WebApi.Infrastructure.Database;
-
-namespace WebApi.Infrastructure;
+﻿namespace WebApi.Infrastructure;
 
 internal static class StartupExtensions
 {
@@ -9,21 +6,8 @@ internal static class StartupExtensions
     {
         ArgumentNullException.ThrowIfNull(services);
         
-        services.AutoRegister();
+        services.AutoRegisterFromWebApi();
         services.AutoConfigureOptions();
-        
-        services.AddDataProtection();
-        services.AddIdentityCore<IdentityUser>(
-                options =>
-                {
-                    options.User.RequireUniqueEmail = true;
-                    options.SignIn.RequireConfirmedAccount = true;
-                }
-            )
-            .AddRoles<IdentityRole>()
-            .AddDefaultTokenProviders()
-            .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddApiEndpoints();
 
         services.AddSingleton(_ => TimeProvider.System);
         
