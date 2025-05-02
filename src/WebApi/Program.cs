@@ -97,10 +97,5 @@ finally
 
 namespace WebApi
 {
-    [SuppressMessage(
-        "Maintainability",
-        "CA1515:Consider making public types internal",
-        Justification = "ImmediateHandlers require behaviors to be public to be discoverable"
-    )]
-    public class Program;
+    internal sealed class Program;
 }

@@ -87,6 +87,15 @@ internal static class StartupExtensions
                 loggerConfiguration.MinimumLevel.Override("Microsoft", LogEventLevel.Warning);
                 loggerConfiguration.MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information);
                 loggerConfiguration.MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Information);
+#if DEBUG
+                loggerConfiguration.MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Information);
+#else
+                loggerConfiguration.MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning);
+                loggerConfiguration.MinimumLevel.Override(
+                    "System.Net.Http.HttpClient.Refit.Implementation",
+                    LogEventLevel.Warning
+                );
+#endif
 
                 loggerConfiguration.Enrich.FromLogContext();
                 loggerConfiguration.Enrich.WithMachineName();
@@ -123,7 +132,14 @@ internal static class StartupExtensions
 
         services.Configure<RequestLoggingOptions>(options =>
             {
-                options.EnrichDiagnosticContext = (context, httpContext) =>
+                options.GetLevel = static (context, _, ex) =>
+                    context.Response.StatusCode >= 500
+                        ? LogEventLevel.Error
+                        : context.Request.Path.StartsWithSegments("/health", StringComparison.OrdinalIgnoreCase)
+                            ? LogEventLevel.Verbose
+                            : LogEventLevel.Information;
+
+                options.EnrichDiagnosticContext = static (context, httpContext) =>
                 {
                     context.Set("RequestProtocol", httpContext.Request.Protocol);
                     context.Set("RequestScheme", httpContext.Request.Scheme);

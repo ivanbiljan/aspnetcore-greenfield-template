@@ -35,7 +35,11 @@ internal static class StartupExtensions
 
                 options.UseNpgsql(
                         connectionString,
-                        configuration => { configuration.EnableRetryOnFailure(3); }
+                        configuration =>
+                        {
+                            configuration.EnableRetryOnFailure(3);
+                            configuration.UseNodaTime();
+                        }
                     )
                     .UseSnakeCaseNamingConvention();
 

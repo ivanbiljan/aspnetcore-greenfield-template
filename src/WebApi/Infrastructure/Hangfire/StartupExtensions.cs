@@ -37,6 +37,7 @@ internal static class StartupExtensions
 
                 hangfireConfiguration.UseFilter(new AutomaticRetryAttribute {Attempts = 1});
                 hangfireConfiguration.UseFilter(new HangfireJobIdEnricher());
+                hangfireConfiguration.UseFilter(new AuditLogJobContextEnricher());
             }
         );
 
