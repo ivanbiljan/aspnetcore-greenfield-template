@@ -43,10 +43,8 @@ internal sealed class JwtFactory
     {
         var jwtHandler = new JsonWebTokenHandler();
 
-        var claimList = new List<Claim>(claims);
-        claimList.AddRange(_options.Audience.Select(audience => new Claim(JwtRegisteredClaimNames.Aud, audience)));
-
-        var claimsDictionary = claimList
+        var claimList = new List<Claim>(claims)
+            .Union(_options.Audience.Select(audience => new Claim(JwtRegisteredClaimNames.Aud, audience)))
             .GroupBy(c => c.Type)
             .ToDictionary(
                 g => g.Key,
@@ -61,7 +59,7 @@ internal sealed class JwtFactory
                 new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_options.Key)),
                 SecurityAlgorithms.HmacSha256
             ),
-            Claims = claimsDictionary,
+            Claims = claimList,
             NotBefore = notBefore,
             Expires = expiresAt
         };
