@@ -61,8 +61,6 @@ try
 
     var app = builder.Build();
 
-    app.UseSerilogRequestLogging();
-
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
@@ -75,13 +73,12 @@ try
 
     app.UseHttpsRedirection();
     app.UseProblemDetails();
-
     app.UseRouting();
+    app.UseMiddleware<RequestIdDecoratorMiddleware>();
+    app.UseSerilogRequestLogging();
     app.UseAuthentication();
     app.UseAuthorization();
-    app.MapControllers();
-
-    app.MapIdentityApi<IdentityUser>();
+    app.MapWebApiEndpoints();
 
     await app.RunAsync();
 }
