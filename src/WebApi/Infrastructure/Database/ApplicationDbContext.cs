@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using EntityFramework.Exceptions.PostgreSQL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
@@ -15,6 +16,15 @@ internal sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext
         configurationBuilder.Properties<Enum>().HaveConversion<string>();
         configurationBuilder.Properties<decimal>().HavePrecision(18, 2);
     }
+
+    /// <inheritdoc />
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+
+        optionsBuilder.UseExceptionProcessor();
+    }
+
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder builder)
     {

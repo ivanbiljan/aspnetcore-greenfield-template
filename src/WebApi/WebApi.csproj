@@ -9,6 +9,7 @@
         <PackageReference Include="AutoRegisterInject" />
         <PackageReference Include="Destructurama.Attributed"/>
         <PackageReference Include="EFCore.NamingConventions" />
+        <PackageReference Include="EntityFrameworkCore.Exceptions.PostgreSQL" />
         <PackageReference Include="Hangfire"/>
         <PackageReference Include="Hangfire.Console"/>
         <PackageReference Include="Hangfire.PostgreSql"/>
