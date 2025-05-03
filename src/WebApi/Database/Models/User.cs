@@ -1,6 +1,8 @@
-﻿namespace WebApi.Database.Models;
+﻿using System.Collections.ObjectModel;
 
-internal sealed class User : EntityBase<int>
+namespace WebApi.Database.Models;
+
+public sealed class User : EntityBase<int>
 {
     public required string FirstName { get; set; }
 
@@ -14,5 +16,5 @@ internal sealed class User : EntityBase<int>
 
     public Instant? EmailConfirmedAtUtc { get; set; }
 
-    public List<UserAuthenticationToken> AuthenticationTokens { get; } = [];
+    public Collection<UserAuthenticationToken> AuthenticationTokens { get; } = [];
 }

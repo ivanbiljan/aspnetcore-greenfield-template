@@ -4,7 +4,7 @@ using WebApi.Database;
 namespace WebApi.Tests.Infrastructure;
 
 [Collection(IntegrationTestCollectionContainer.FixtureName)]
-internal abstract class IntegrationTestBase(CustomApplicationFactory factory)
+public abstract class IntegrationTestBase(CustomApplicationFactory factory) : IAsyncLifetime
 {
     protected CustomApplicationFactory Factory { get; } = factory;
 
@@ -32,5 +32,15 @@ internal abstract class IntegrationTestBase(CustomApplicationFactory factory)
     {
         DbContext.Set<TEntity>().RemoveRange(entities);
         await DbContext.SaveChangesAsync();
+    }
+
+    public Task InitializeAsync()
+    {
+        return Task.CompletedTask;
+    }
+
+    public async Task DisposeAsync()
+    {
+        await Factory.ResetDatabaseAsync();
     }
 }

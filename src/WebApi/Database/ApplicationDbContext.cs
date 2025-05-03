@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace WebApi.Database;
 
-internal sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
+public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
     public DbSet<User> Users => Set<User>();
 
@@ -29,13 +29,13 @@ internal sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext
     }
 
     /// <inheritdoc />
-    protected override void OnModelCreating(ModelBuilder builder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(builder);
+        base.OnModelCreating(modelBuilder);
 
-        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-        foreach (var entityType in builder.Model.GetEntityTypes())
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
             entityType.AddAnnotation(
                 Annotations.LogAuditTrail,

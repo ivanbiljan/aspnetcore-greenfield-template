@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using Immediate.Handlers.Shared;
-using WebApi.Infrastructure.Web;
+using WebApi.Features.Authentication;
 
 namespace WebApi.Infrastructure.Behaviors;
 

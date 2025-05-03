@@ -2,15 +2,18 @@
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using Npgsql;
+using Respawn;
 using Testcontainers.PostgreSql;
 using WebApi.Database;
+using WebApi.Features.Authentication;
 using WebApi.Infrastructure;
 using WebApi.Infrastructure.Logging;
 using WebApi.Infrastructure.Web;
 
 namespace WebApi.Tests.Infrastructure;
 
-internal sealed class CustomApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
+public sealed class CustomApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
     private readonly PostgreSqlContainer _postgreSqlContainer = new PostgreSqlBuilder()
         .WithImage(PostgreSqlBuilder.PostgreSqlImage)
@@ -19,7 +22,12 @@ internal sealed class CustomApplicationFactory : WebApplicationFactory<Program>,
         .WithPassword(PostgreSqlBuilder.DefaultPassword)
         .Build();
 
+    private NpgsqlConnection _npgsqlConnection = null!;
+    private Respawner _respawner = null!;
+
     public IServiceScope ServiceScope { get; private set; } = null!;
+
+    public IConfiguration Configuration => Services.GetRequiredService<IConfiguration>();
 
     public async Task InitializeAsync()
     {
@@ -28,13 +36,31 @@ internal sealed class CustomApplicationFactory : WebApplicationFactory<Program>,
 
         var dbContext = ServiceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         await dbContext.Database.EnsureCreatedAsync();
+
+        _npgsqlConnection = new NpgsqlConnection(_postgreSqlContainer.GetConnectionString());
+        await _npgsqlConnection.OpenAsync();
+
+        _respawner = await Respawner.CreateAsync(
+            _npgsqlConnection,
+            new RespawnerOptions
+            {
+                TablesToIgnore = ["__EFMigrationsHistory"],
+                DbAdapter = DbAdapter.Postgres
+            }
+        );
     }
 
     public new async Task DisposeAsync()
     {
         ServiceScope.Dispose();
         await _postgreSqlContainer.DisposeAsync();
+        await _npgsqlConnection.DisposeAsync();
         await base.DisposeAsync();
+    }
+
+    public async Task ResetDatabaseAsync()
+    {
+        await _respawner.ResetAsync(_npgsqlConnection);
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)

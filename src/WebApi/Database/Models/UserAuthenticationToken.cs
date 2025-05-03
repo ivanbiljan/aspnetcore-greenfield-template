@@ -1,6 +1,8 @@
-﻿namespace WebApi.Database.Models;
+﻿using System.Diagnostics.CodeAnalysis;
 
-internal sealed class UserAuthenticationToken : EntityBase<int>
+namespace WebApi.Database.Models;
+
+public sealed class UserAuthenticationToken : EntityBase<int>
 {
     public required int UserId { get; init; }
 
@@ -14,7 +16,8 @@ internal sealed class UserAuthenticationToken : EntityBase<int>
 
     public required string Token { get; init; }
 
-    internal enum TokenPurpose
+    [SuppressMessage("Design", "CA1008:Enums should have zero value", Justification = "Not applicable")]
+    public enum TokenPurpose
     {
         RefreshToken = 1,
         PasswordReset = 2,

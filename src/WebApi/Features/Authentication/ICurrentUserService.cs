@@ -1,9 +1,9 @@
 ﻿using System.Globalization;
 using System.Security.Claims;
 
-namespace WebApi.Infrastructure.Web;
+namespace WebApi.Features.Authentication;
 
-internal interface ICurrentUserService
+public interface ICurrentUserService
 {
     bool IsAuthenticated { get; }
 

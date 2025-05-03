@@ -15,6 +15,7 @@
         <PackageReference Include="Microsoft.NET.Test.Sdk"/>
         <PackageReference Include="Moq"/>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"/>
+        <PackageReference Include="Respawn" />
         <PackageReference Include="Shouldly"/>
         <PackageReference Include="Testcontainers.PostgreSql"/>
         <PackageReference Include="xunit"/>

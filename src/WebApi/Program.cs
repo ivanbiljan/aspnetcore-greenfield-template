@@ -99,5 +99,6 @@ finally
 
 namespace WebApi
 {
-    internal sealed class Program;
+    [SuppressMessage("Maintainability", "CA1515:Consider making public types internal", Justification = "Required by xUnit")]
+    public sealed class Program;
 }
