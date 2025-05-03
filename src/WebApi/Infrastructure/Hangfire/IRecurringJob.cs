@@ -21,7 +21,7 @@ internal interface IRecurringJob
     ///     The method invoked by Hangfire to execute the job.
     /// </summary>
     /// <param name="context">
-    ///     The <see cref="PerformContext" /> that is auto-populated by Hangfire when execution starts. Can
+    ///     The <see cref="PerformContext" /> that is autopopulated by Hangfire when execution starts. Can
     ///     be used to log information to the job's output stream so that it is visible in the dashboard.
     /// </param>
     /// <returns>A task for this action.</returns>

@@ -1,7 +1,9 @@
 ﻿using System.Globalization;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
-using WebApi.Features.Authentication;
+using NodaTime.Extensions;
+
+namespace WebApi.Features.Authentication;
 
 [RegisterScoped]
 internal sealed class AccessTokenManager(
@@ -14,7 +16,7 @@ internal sealed class AccessTokenManager(
     private readonly JwtFactory _jwtFactory = jwtFactory;
     private readonly JwtOptions _jwtOptions = jwtOptions.Value;
 
-    public async Task<(string AccessToken, DateTime ExpiresAtUtc, string RefreshToken)> CreateAccessToken(
+    public async Task<(string AccessToken, DateTime ExpiresAtUtc, string RefreshToken)> CreateAccessTokenAsync(
         int userId,
         CancellationToken cancellationToken = default
     )
@@ -39,16 +41,16 @@ internal sealed class AccessTokenManager(
                 UserId = user.Id,
                 Purpose = UserAuthenticationToken.TokenPurpose.RefreshToken,
                 Token = refreshToken,
-                ValidUntilUtc = Instant.FromDateTimeUtc(tokenExpiresAt)
+                ValidUntilUtc = tokenExpiresAt.ToInstant()
             }
         );
 
         return (accessToken, tokenExpiresAt, refreshToken);
     }
 
-    public async Task InvalidateRefreshTokens(int userId, CancellationToken cancellationToken = default)
+    public async Task InvalidateRefreshTokensAsync(int userId, CancellationToken cancellationToken = default)
     {
-        var instant = Instant.FromDateTimeUtc(DateTime.UtcNow);
+        var instant = DateTime.UtcNow.ToInstant();
         var refreshTokens = await _context.UserAuthenticationTokens
             .Where(t => t.UserId == userId)
             .Where(t => t.Purpose == UserAuthenticationToken.TokenPurpose.RefreshToken)

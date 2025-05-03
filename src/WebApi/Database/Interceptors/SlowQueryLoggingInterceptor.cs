@@ -5,7 +5,7 @@ namespace WebApi.Database.Interceptors;
 
 internal sealed class SlowQueryLoggingInterceptor(ILogger<SlowQueryLoggingInterceptor> logger) : DbCommandInterceptor
 {
-    private const int ThresholdInMilliseconds = 250;
+    private const int ThresholdInMilliseconds = 100;
 
     private readonly ILogger<SlowQueryLoggingInterceptor> _logger = logger;
 
@@ -16,7 +16,7 @@ internal sealed class SlowQueryLoggingInterceptor(ILogger<SlowQueryLoggingInterc
         DbDataReader result
     )
     {
-        if (eventData.Duration.Milliseconds > ThresholdInMilliseconds)
+        if (eventData.Duration.Milliseconds >= ThresholdInMilliseconds)
         {
             _logger.LogWarning(
                 "DB query took more than {ThresholdInMilliseconds}ms: {CommandText}",

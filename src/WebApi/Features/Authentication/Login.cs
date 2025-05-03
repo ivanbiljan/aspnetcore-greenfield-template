@@ -42,15 +42,16 @@ internal static partial class Login
                 throw new NotFoundException("Invalid email or password");
             }
 
-            var accessToken = await accessTokenManager.CreateAccessToken(user.Id, cancellationToken);
+            var (accessToken, accessTokenExpiresAt, refreshToken) =
+                await accessTokenManager.CreateAccessTokenAsync(user.Id, cancellationToken);
 
             await context.SaveChangesAsync(cancellationToken);
 
             return new Response
             {
-                AccessToken = accessToken.AccessToken,
-                ExpiresAtUtc = (long) accessToken.ExpiresAtUtc.Subtract(DateTime.UnixEpoch).TotalSeconds,
-                RefreshToken = accessToken.RefreshToken
+                AccessToken = accessToken,
+                ExpiresAtUtc = (long) accessTokenExpiresAt.Subtract(DateTime.UnixEpoch).TotalSeconds,
+                RefreshToken = refreshToken
             };
         }
     }

@@ -13,7 +13,7 @@ internal sealed class AuditLogEnrichingBehavior<TRequest, TResponse>(
     public override async ValueTask<TResponse> HandleAsync(TRequest request, CancellationToken cancellationToken)
     {
         var auditLogActor = _currentUserService.IsAuthenticated
-            ? $"App user ID {_currentUserService.GetId().ToString(CultureInfo.InvariantCulture)}"
+            ? $"User ID {_currentUserService.GetId().ToString(CultureInfo.InvariantCulture)}"
             : _currentUserService.UserAgent;
 
         using var auditContext = new AuditContext();
