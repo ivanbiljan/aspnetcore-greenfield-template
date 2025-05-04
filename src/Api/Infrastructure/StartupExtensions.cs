@@ -10,7 +10,7 @@ internal static class StartupExtensions
     {
         ArgumentNullException.ThrowIfNull(services);
 
-        services.AutoRegisterFromWebApi();
+        services.AutoRegisterFromApi();
         services.AutoConfigureOptions();
 
         services.AddSingleton(_ => TimeProvider.System);
@@ -21,8 +21,8 @@ internal static class StartupExtensions
 
         services.AddHttpContextAccessor();
 
-        services.AddWebApiBehaviors();
-        services.AddWebApiHandlers();
+        services.AddApiBehaviors();
+        services.AddApiHandlers();
 
         return services;
     }
