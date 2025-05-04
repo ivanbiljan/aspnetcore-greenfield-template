@@ -79,7 +79,7 @@ try
     app.UseSerilogRequestLogging();
     app.UseAuthentication();
     app.UseAuthorization();
-    app.MapWebApiEndpoints();
+    app.MapApiEndpoints();
 
     await app.RunAsync();
 }
