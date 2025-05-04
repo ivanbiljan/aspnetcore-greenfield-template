@@ -1,12 +1,12 @@
+using Api.Database;
+using Api.Infrastructure;
+using Api.Infrastructure.Hangfire;
+using Api.Infrastructure.Logging;
 using Hangfire;
-using WebApi.Database;
-using WebApi.Infrastructure;
-using WebApi.Infrastructure.Hangfire;
-using WebApi.Infrastructure.Logging;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-builder.Configuration.AddJsonFile("secrets.json", optional: true);
+builder.Configuration.AddJsonFile("secrets.json", true);
 
 builder.AddEntityFramework();
 builder.Services.AddSerilogInternal("Worker");
