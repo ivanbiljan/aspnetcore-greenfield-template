@@ -1,4 +1,4 @@
-﻿namespace WebApi.Tests.Infrastructure;
+﻿namespace Api.Tests.Infrastructure;
 
 internal static class Extensions
 {

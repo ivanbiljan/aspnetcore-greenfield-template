@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
+﻿using Api.Database;
+using Api.Features.Authentication;
+using Api.Infrastructure;
+using Api.Infrastructure.Logging;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -6,7 +10,7 @@ using Npgsql;
 using Respawn;
 using Testcontainers.PostgreSql;
 
-namespace WebApi.Tests.Infrastructure;
+namespace Api.Tests.Infrastructure;
 
 public sealed class CustomApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
@@ -70,25 +74,28 @@ public sealed class CustomApplicationFactory : WebApplicationFactory<Program>, I
         );
 
         builder.ConfigureTestServices(services =>
-        {
-            var httpContextAccessorMock = new Mock<IHttpContextAccessor>();
-            httpContextAccessorMock.Setup(x => x.HttpContext).Returns(new DefaultHttpContext());
+            {
+                var httpContextAccessorMock = new Mock<IHttpContextAccessor>();
+                httpContextAccessorMock.Setup(x => x.HttpContext).Returns(new DefaultHttpContext());
 
-            services.Remove<IHttpContextAccessor>()
-                .AddSingleton(httpContextAccessorMock.Object);
+                services.Remove<IHttpContextAccessor>()
+                    .AddSingleton(httpContextAccessorMock.Object);
 
-            services
-                .Remove<DbContextOptions<ApplicationDbContext>>()
-                .AddDbContext<ApplicationDbContext>(options =>
-                    options.UseNpgsql(_postgreSqlContainer.GetConnectionString())
-                );
+                services
+                    .Remove<DbContextOptions<ApplicationDbContext>>()
+                    .AddDbContext<ApplicationDbContext>(options =>
+                        options.UseNpgsql(_postgreSqlContainer.GetConnectionString())
+                    );
 
-            services.AddSerilogInternal("WebApi");
-            services.ConfigureSerilogHttpLogging();
-            services.AddWebApiServices();
+                services.AddSerilogInternal("Api");
+                services.ConfigureSerilogHttpLogging();
+                services.AddWebApiServices();
 
-            var currentUserServiceMock = new Mock<ICurrentUserService>();
-            currentUserServiceMock.Setup(s => s.GetId()).Returns(1);
-            services.Remove<ICurrentUserService>()
-                .AddScoped<ICurrentUserService>(_ => currentUserServiceMock.Object);
-        }
+                var currentUserServiceMock = new Mock<IUserContext>();
+                currentUserServiceMock.Setup(s => s.GetId()).Returns(1);
+                services.Remove<IUserContext>()
+                    .AddScoped<IUserContext>(_ => currentUserServiceMock.Object);
+            }
+        );
+    }
+}

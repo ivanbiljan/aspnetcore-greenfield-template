@@ -1,10 +1,14 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Api.Database.Models;
+using Api.Features.Authentication;
+using Api.Infrastructure.Exceptions;
+using Microsoft.AspNetCore.Identity;
 using NodaTime.Extensions;
-using WebApi.Tests.Infrastructure;
+using Api.Tests.Infrastructure;
+using Shouldly;
 
-namespace WebApi.Tests.Features.Authentication;
+namespace Api.Tests.Features.Authentication;
 
-public sealed class LoginTests(CustomApplicationFactory factory) : IntegrationTestBase(factory)
+public sealed class LoginTests(CustomApplicationFactory factory) : IntegrationTestCollection(factory)
 {
     [Fact]
     public Task UnknownEmail_ThrowsNotFoundException()
@@ -97,3 +101,5 @@ public sealed class LoginTests(CustomApplicationFactory factory) : IntegrationTe
         response.AccessToken.ShouldNotBeNullOrEmpty();
         response.ExpiresAtUtc.ShouldBeGreaterThan(0);
         response.RefreshToken.ShouldNotBeNullOrEmpty();
+    }
+}

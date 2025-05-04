@@ -2,7 +2,7 @@
 using Api.Database;
 using Immediate.Handlers.Shared;
 
-namespace WebApi.Tests.Infrastructure;
+namespace Api.Tests.Infrastructure;
 
 [CollectionDefinition(FixtureName)]
 [SuppressMessage(
