@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Api.Database;
 
-internal static class StartupExtensions
+internal static class DatabaseStartupExtensions
 {
     public static IHostApplicationBuilder AddEntityFramework(this IHostApplicationBuilder builder)
     {
