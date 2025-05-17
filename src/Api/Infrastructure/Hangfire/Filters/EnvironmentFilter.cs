@@ -12,7 +12,10 @@ internal sealed class EnvironmentFilter(IHostEnvironment hostEnvironment) : IEle
     {
         var allowedEnvironments = JsonSerializer.Deserialize<List<string>>(
             context.Connection.GetAllEntriesFromHash($"recurring-job:{context.BackgroundJob.Id}")
-                .GetValueOrDefault("AllowedEnvironments", """["Development", "Staging", "Production"]""")
+                .GetValueOrDefault(
+                    "AllowedEnvironments",
+                    $"""["{Environments.Development}", "{Environments.Staging}", "{Environments.Production}"]"""
+                )
         )!;
 
         if (allowedEnvironments.Contains(_hostEnvironment.EnvironmentName))
@@ -20,6 +23,10 @@ internal sealed class EnvironmentFilter(IHostEnvironment hostEnvironment) : IEle
             return;
         }
 
-        context.CandidateState = new DeletedState();
+        context.CandidateState = new DeletedState
+        {
+            Reason =
+                $"Job is disabled in this environment ({_hostEnvironment.EnvironmentName}). Allowed environments: {string.Join(", ", allowedEnvironments)}"
+        };
     }
 }
