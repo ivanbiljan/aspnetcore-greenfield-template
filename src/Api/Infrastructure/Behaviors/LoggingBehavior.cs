@@ -58,7 +58,7 @@ public sealed class LoggingBehavior<TRequest, TResponse>(
             }
             catch (Exception ex)
             {
-                if (ex is WebApiException)
+                if (ex is ApiException)
                 {
                     _logger.LogInformation("{Handler} returned an error: {Message}", handlerName, ex.Message);
                 }

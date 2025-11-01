@@ -67,7 +67,7 @@ internal static class ProblemDetailsMiddleware
             }
         );
 
-        options.Map<WebApiException>((ctx, ex) =>
+        options.Map<ApiException>((ctx, ex) =>
             {
                 var factory = ctx.RequestServices.GetRequiredService<ProblemDetailsFactory>();
 
