@@ -41,7 +41,7 @@ internal sealed class AccessTokenManager(
                 UserId = user.Id,
                 Purpose = UserAuthenticationToken.TokenPurpose.RefreshToken,
                 Token = refreshToken,
-                ValidUntilUtc = tokenExpiresAt.ToInstant()
+                ValidUntilUtc = refreshTokenExpiration.ToInstant()
             }
         );
 
