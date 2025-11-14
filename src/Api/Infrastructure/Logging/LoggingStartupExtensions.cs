@@ -86,7 +86,6 @@ internal static class LoggingStartupExtensions
                 loggerConfiguration.MinimumLevel.Information();
                 loggerConfiguration.MinimumLevel.Override("Microsoft", LogEventLevel.Warning);
                 loggerConfiguration.MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information);
-                loggerConfiguration.MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Information);
 #if DEBUG
                 loggerConfiguration.MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Information);
 #else
