@@ -73,10 +73,10 @@ try
     }
 
     app.UseHttpsRedirection();
+    app.UseSerilogRequestLogging();
     app.UseProblemDetails();
     app.UseRouting();
     app.UseMiddleware<RequestIdDecoratorMiddleware>();
-    app.UseSerilogRequestLogging();
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapApiEndpoints();
