@@ -8,9 +8,9 @@ internal sealed class AuditContext
 
     public static string? AuditedBy => CurrentScope?.AuditedBy;
 
-    public static IReadOnlyDictionary<string, object> CurrentProperties =>
+    public static IReadOnlyDictionary<string, object?> CurrentProperties =>
         CurrentScope?.GetMergedProperties()
-        ?? ImmutableDictionary<string, object>.Empty;
+        ?? ImmutableDictionary<string, object?>.Empty;
 
     internal static AuditContextScope? CurrentScope
     {
@@ -18,7 +18,7 @@ internal sealed class AuditContext
         set => CurrentScopeAsyncLocal.Value = value;
     }
 
-    public static AuditContextScope BeginScope(params (string Key, object Value)[] properties)
+    public static AuditContextScope BeginScope(params (string Key, object? Value)[] properties)
     {
         var scope = new AuditContextScope(CurrentScopeAsyncLocal.Value);
 
@@ -32,7 +32,7 @@ internal sealed class AuditContext
         return scope;
     }
 
-    public static AuditContextScope BeginScope(IEnumerable<KeyValuePair<string, object>> properties)
+    public static AuditContextScope BeginScope(IEnumerable<KeyValuePair<string, object?>> properties)
     {
         var scope = new AuditContextScope(CurrentScopeAsyncLocal.Value);
 
@@ -50,7 +50,7 @@ internal sealed class AuditContext
 public sealed class AuditContextScope : IDisposable
 {
     private readonly AuditContextScope? _parent;
-    private readonly Dictionary<string, object> _properties = new();
+    private readonly Dictionary<string, object?> _properties = new();
     private bool _disposed;
 
     internal AuditContextScope(AuditContextScope? parent)
@@ -97,7 +97,7 @@ public sealed class AuditContextScope : IDisposable
         return _properties.Remove(key);
     }
 
-    public void SetProperty(string key, object value)
+    public void SetProperty(string key, object? value)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
@@ -106,14 +106,14 @@ public sealed class AuditContextScope : IDisposable
         _properties[key] = value;
     }
 
-    internal IReadOnlyDictionary<string, object> GetMergedProperties()
+    internal IReadOnlyDictionary<string, object?> GetMergedProperties()
     {
         if (_parent is null)
         {
             return _properties;
         }
 
-        var merged = new Dictionary<string, object>(_parent.GetMergedProperties());
+        var merged = new Dictionary<string, object?>(_parent.GetMergedProperties());
 
         foreach (var kvp in _properties)
         {

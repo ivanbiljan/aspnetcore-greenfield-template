@@ -111,7 +111,7 @@ internal sealed class AuditLoggingInterceptor(IHttpContextAccessor httpContextAc
                 TraceId = traceId.ToString(),
                 SpanId = spanId.ToString(),
                 ExtraProperties = JsonSerializer.SerializeToDocument(
-                    auditContext?.GetMergedProperties() ?? new Dictionary<string, object>()
+                    auditContext?.GetMergedProperties() ?? new Dictionary<string, object?>()
                 )
             };
 
