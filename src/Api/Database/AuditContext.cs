@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Api.Database;
 
@@ -6,7 +7,7 @@ internal sealed class AuditContext : IDisposable
 {
     private static readonly AsyncLocal<AuditContext?> ActiveContext = new();
 
-    private readonly IDictionary<string, object?> _extraFields = new Dictionary<string, object?>();
+    private readonly IDictionary<string, object?> _extraFields = new ConcurrentDictionary<string, object?>();
     private readonly AuditContext? _parentContext;
 
     private bool _isDisposed;
