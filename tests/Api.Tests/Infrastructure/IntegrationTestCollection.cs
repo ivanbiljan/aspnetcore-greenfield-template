@@ -19,25 +19,24 @@ public sealed class IntegrationTestCollectionContainer : ICollectionFixture<Cust
 [SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix")]
 public abstract class IntegrationTestCollection(CustomApplicationFactory factory) : IAsyncLifetime
 {
-    protected CustomApplicationFactory Factory { get; } = factory;
-
     protected ApplicationDbContext DbContext => GetService<ApplicationDbContext>();
 
-    public Task InitializeAsync()
-    {
-        return Task.CompletedTask;
-    }
+    protected CustomApplicationFactory Factory { get; } = factory;
 
     public async Task DisposeAsync()
     {
         await Factory.ResetDatabaseAsync();
     }
 
-    public async Task<TResponse> Send<TRequest, TResponse>(TRequest request)
+    public Task InitializeAsync()
     {
-        var sender = GetService<IHandler<TRequest, TResponse>>();
+        return Task.CompletedTask;
+    }
 
-        return await sender.HandleAsync(request);
+    public async Task DeleteAsync<TEntity>(params TEntity[] entities) where TEntity : class
+    {
+        DbContext.Set<TEntity>().RemoveRange(entities);
+        await DbContext.SaveChangesAsync();
     }
 
     public TService GetService<TService>() where TService : notnull
@@ -51,9 +50,10 @@ public abstract class IntegrationTestCollection(CustomApplicationFactory factory
         await DbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync<TEntity>(params TEntity[] entities) where TEntity : class
+    public async Task<TResponse> Send<TRequest, TResponse>(TRequest request)
     {
-        DbContext.Set<TEntity>().RemoveRange(entities);
-        await DbContext.SaveChangesAsync();
+        var sender = GetService<IHandler<TRequest, TResponse>>();
+
+        return await sender.HandleAsync(request);
     }
 }

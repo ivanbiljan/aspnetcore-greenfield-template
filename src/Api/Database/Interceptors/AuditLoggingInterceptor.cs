@@ -30,6 +30,29 @@ internal sealed class AuditLoggingInterceptor(IHttpContextAccessor httpContextAc
         return new ValueTask<InterceptionResult<int>>(result);
     }
 
+    private static JsonDocument SerializeProperties(PropertyValues propertyValues, IEnumerable<string> propertyNames)
+    {
+        var selectedProperties = propertyValues.Properties
+            .Where(p => propertyNames.Contains(p.Name))
+            .ToDictionary(
+                p => p.Name,
+                p =>
+                {
+                    var value = propertyValues[p];
+                    if (value is null)
+                    {
+                        return value;
+                    }
+
+                    var type = value.GetType();
+
+                    return type.IsEnum ? Enum.GetName(type, value) : value;
+                }
+            );
+
+        return JsonSerializer.SerializeToDocument(selectedProperties);
+    }
+
     private void CaptureAuditLogEntries(DbContextEventData eventData)
     {
         if (eventData.Context is null)
@@ -60,7 +83,7 @@ internal sealed class AuditLoggingInterceptor(IHttpContextAccessor httpContextAc
                 continue;
             }
 
-            var auditContext = AuditContext.Current;
+            var auditContext = AuditContext.CurrentScope;
 
             var primaryKey = entry.Properties
                 .Where(p => p.Metadata.IsPrimaryKey())
@@ -87,33 +110,12 @@ internal sealed class AuditLoggingInterceptor(IHttpContextAccessor httpContextAc
                     : null,
                 TraceId = traceId.ToString(),
                 SpanId = spanId.ToString(),
-                ExtraProperties = JsonSerializer.SerializeToDocument(auditContext?.ExtraFields ?? [])
+                ExtraProperties = JsonSerializer.SerializeToDocument(
+                    auditContext?.GetMergedProperties() ?? new Dictionary<string, object>()
+                )
             };
 
             eventData.Context.Add(auditEntry);
         }
-    }
-
-    private static JsonDocument SerializeProperties(PropertyValues propertyValues, IEnumerable<string> propertyNames)
-    {
-        var selectedProperties = propertyValues.Properties
-            .Where(p => propertyNames.Contains(p.Name))
-            .ToDictionary(
-                p => p.Name,
-                p =>
-                {
-                    var value = propertyValues[p];
-                    if (value is null)
-                    {
-                        return value;
-                    }
-
-                    var type = value.GetType();
-
-                    return type.IsEnum ? Enum.GetName(type, value) : value;
-                }
-            );
-
-        return JsonSerializer.SerializeToDocument(selectedProperties);
     }
 }

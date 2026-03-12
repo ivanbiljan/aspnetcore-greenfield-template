@@ -24,9 +24,17 @@ public sealed class CustomApplicationFactory : WebApplicationFactory<Program>, I
     private NpgsqlConnection _npgsqlConnection = null!;
     private Respawner _respawner = null!;
 
+    public IConfiguration Configuration => Services.GetRequiredService<IConfiguration>();
+
     public IServiceScope ServiceScope { get; private set; } = null!;
 
-    public IConfiguration Configuration => Services.GetRequiredService<IConfiguration>();
+    public new async Task DisposeAsync()
+    {
+        ServiceScope.Dispose();
+        await _postgreSqlContainer.DisposeAsync();
+        await _npgsqlConnection.DisposeAsync();
+        await base.DisposeAsync();
+    }
 
     public async Task InitializeAsync()
     {
@@ -47,19 +55,6 @@ public sealed class CustomApplicationFactory : WebApplicationFactory<Program>, I
                 DbAdapter = DbAdapter.Postgres
             }
         );
-    }
-
-    public new async Task DisposeAsync()
-    {
-        ServiceScope.Dispose();
-        await _postgreSqlContainer.DisposeAsync();
-        await _npgsqlConnection.DisposeAsync();
-        await base.DisposeAsync();
-    }
-
-    public async Task ResetDatabaseAsync()
-    {
-        await _respawner.ResetAsync(_npgsqlConnection);
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -97,5 +92,10 @@ public sealed class CustomApplicationFactory : WebApplicationFactory<Program>, I
                     .AddScoped<IUserContext>(_ => currentUserServiceMock.Object);
             }
         );
+    }
+
+    public async Task ResetDatabaseAsync()
+    {
+        await _respawner.ResetAsync(_npgsqlConnection);
     }
 }

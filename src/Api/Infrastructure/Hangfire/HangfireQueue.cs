@@ -29,9 +29,10 @@ internal sealed record HangfireQueue
         _queueName = queueName;
     }
 
-    public static implicit operator string(HangfireQueue? queue)
+    /// <inheritdoc />
+    public override string ToString()
     {
-        return queue?._queueName ?? Default;
+        return _queueName;
     }
 
     /// <summary>
@@ -43,9 +44,8 @@ internal sealed record HangfireQueue
         return [CriticalPriority.ToString(), Default.ToString(), LowPriority.ToString()];
     }
 
-    /// <inheritdoc />
-    public override string ToString()
+    public static implicit operator string(HangfireQueue? queue)
     {
-        return _queueName;
+        return queue?._queueName ?? Default;
     }
 }

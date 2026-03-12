@@ -4,7 +4,6 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
-using SourceGenerators;
 
 namespace Api.Features.Authentication;
 
@@ -12,6 +11,8 @@ namespace Api.Features.Authentication;
 internal sealed record JwtOptions
 {
     public const string ConfigurationSectionName = "Jwt";
+
+    public required int AccessTokenExpirationInMinutes { get; init; } = 5;
 
     [Required]
     public required IEnumerable<string> Audience { get; init; } = [];
@@ -21,8 +22,6 @@ internal sealed record JwtOptions
 
     [Required]
     public required string Key { get; init; }
-
-    public required int AccessTokenExpirationInMinutes { get; init; } = 5;
 
     public required int RefreshTokenExpirationInMinutes { get; init; } = 24 * 60;
 }

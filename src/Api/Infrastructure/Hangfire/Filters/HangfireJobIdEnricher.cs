@@ -16,14 +16,14 @@ internal sealed class HangfireJobIdEnricher : IServerFilter, ILogEventEnricher
     }
 
     /// <inheritdoc />
-    public void OnPerforming(PerformingContext context)
-    {
-        HangfireJobId.Value = context.BackgroundJob.Id;
-    }
-
-    /// <inheritdoc />
     public void OnPerformed(PerformedContext context)
     {
         HangfireJobId.Value = null;
+    }
+
+    /// <inheritdoc />
+    public void OnPerforming(PerformingContext context)
+    {
+        HangfireJobId.Value = context.BackgroundJob.Id;
     }
 }

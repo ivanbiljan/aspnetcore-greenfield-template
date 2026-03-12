@@ -7,15 +7,6 @@ namespace Api.Infrastructure.Hangfire;
 internal static class RecurringJobProvider
 {
     /// <summary>
-    ///     Scans the entry assembly for types derived from <see cref="IRecurringJob" /> and creates a
-    ///     <see cref="RecurringJob" /> for each. Cron expressions are evaluated against UTC.
-    /// </summary>
-    public static void ScheduleRecurringJobsForCurrentAssembly(IServiceProvider serviceProvider)
-    {
-        ScheduleRecurringJobsForAssembly(Assembly.GetEntryAssembly()!, serviceProvider);
-    }
-
-    /// <summary>
     ///     Scans the provided assembly for types derived from <see cref="IRecurringJob" /> and creates a
     ///     <see cref="RecurringJob" /> for each. Cron expressions are evaluated against UTC.
     /// </summary>
@@ -49,5 +40,14 @@ internal static class RecurringJobProvider
                 job.Cron
             );
         }
+    }
+
+    /// <summary>
+    ///     Scans the entry assembly for types derived from <see cref="IRecurringJob" /> and creates a
+    ///     <see cref="RecurringJob" /> for each. Cron expressions are evaluated against UTC.
+    /// </summary>
+    public static void ScheduleRecurringJobsForCurrentAssembly(IServiceProvider serviceProvider)
+    {
+        ScheduleRecurringJobsForAssembly(Assembly.GetEntryAssembly()!, serviceProvider);
     }
 }

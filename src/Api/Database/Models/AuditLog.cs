@@ -7,27 +7,27 @@ internal sealed class AuditLog : EntityBase<int>
 {
     private static readonly JsonDocument EmptyDocument = JsonDocument.Parse("{}");
 
-    public required string? Type { get; init; }
-
-    public required string? TableName { get; init; }
-
-    public required JsonDocument OldValues { get; init; } = EmptyDocument;
-
-    public required JsonDocument NewValues { get; init; } = EmptyDocument;
+    public required string? Actor { get; init; }
 
     public required IEnumerable<string> AffectedColumns { get; init; } = [];
 
-    public required JsonDocument PrimaryKey { get; init; } = EmptyDocument;
+    public required JsonDocument ExtraProperties { get; init; } = EmptyDocument;
 
-    public required string? Actor { get; init; }
+    public required JsonDocument NewValues { get; init; } = EmptyDocument;
+
+    public required JsonDocument OldValues { get; init; } = EmptyDocument;
+
+    public required JsonDocument PrimaryKey { get; init; } = EmptyDocument;
 
     public required string? RequestPath { get; init; }
 
-    public required string? TraceId { get; init; }
-
     public required string? SpanId { get; init; }
 
-    public required JsonDocument ExtraProperties { get; init; } = EmptyDocument;
+    public required string? TableName { get; init; }
+
+    public required string? TraceId { get; init; }
+
+    public required string? Type { get; init; }
 }
 
 internal sealed class AuditLogConfiguration : IEntityTypeConfiguration<AuditLog>

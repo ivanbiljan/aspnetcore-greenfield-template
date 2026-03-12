@@ -5,11 +5,6 @@ namespace Api.Infrastructure.RazorEngineCore;
 
 internal class HtmlSafeTemplate<T> : RazorEngineTemplateBase<T>
 {
-    public static object Raw(object? value)
-    {
-        return new RawContent(value);
-    }
-
     public override void Write(object? obj = null)
     {
         var value = obj is RawContent rawContent
@@ -33,6 +28,11 @@ internal class HtmlSafeTemplate<T> : RazorEngineTemplateBase<T>
             : HttpUtility.HtmlAttributeEncode(value?.ToString());
 
         base.WriteAttributeValue(prefix, prefixOffset, value, valueOffset, valueLength, isLiteral);
+    }
+
+    public static object Raw(object? value)
+    {
+        return new RawContent(value);
     }
 
     private sealed class RawContent(object? value)

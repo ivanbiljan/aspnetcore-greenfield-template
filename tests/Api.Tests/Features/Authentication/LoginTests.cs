@@ -1,9 +1,9 @@
 ﻿using Api.Database.Models;
 using Api.Features.Authentication;
 using Api.Infrastructure.Exceptions;
+using Api.Tests.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using NodaTime.Extensions;
-using Api.Tests.Infrastructure;
 using Shouldly;
 
 namespace Api.Tests.Features.Authentication;
@@ -11,18 +11,32 @@ namespace Api.Tests.Features.Authentication;
 public sealed class LoginTests(CustomApplicationFactory factory) : IntegrationTestCollection(factory)
 {
     [Fact]
-    public Task UnknownEmail_ThrowsNotFoundException()
+    public async Task ConfirmedAndValidPassword_ReturnsAccessToken()
     {
-        Send<Login.Command, Login.Response>(
-                new Login.Command
-                {
-                    Email = "does not exist",
-                    Password = ""
-                }
-            )
-            .ShouldThrow<NotFoundException>();
+        var passwordHasher = GetService<IPasswordHasher<User>>();
+        await InsertAsync(
+            new User
+            {
+                FirstName = "John",
+                LastName = "Doe",
+                DateOfBirth = DateTime.UtcNow.ToLocalDateTime().Date,
+                Email = "test@acme.com",
+                Password = passwordHasher.HashPassword(null!, "test"),
+                EmailConfirmedAtUtc = DateTime.UtcNow.ToInstant()
+            }
+        );
 
-        return Task.CompletedTask;
+        var response = await Send<Login.Command, Login.Response>(
+            new Login.Command
+            {
+                Email = "test@acme.com",
+                Password = "test"
+            }
+        );
+
+        response.AccessToken.ShouldNotBeNullOrEmpty();
+        response.ExpiresAtUtc.ShouldBeGreaterThan(0);
+        response.RefreshToken.ShouldNotBeNullOrEmpty();
     }
 
     [Fact]
@@ -75,31 +89,17 @@ public sealed class LoginTests(CustomApplicationFactory factory) : IntegrationTe
     }
 
     [Fact]
-    public async Task ConfirmedAndValidPassword_ReturnsAccessToken()
+    public Task UnknownEmail_ThrowsNotFoundException()
     {
-        var passwordHasher = GetService<IPasswordHasher<User>>();
-        await InsertAsync(
-            new User
-            {
-                FirstName = "John",
-                LastName = "Doe",
-                DateOfBirth = DateTime.UtcNow.ToLocalDateTime().Date,
-                Email = "test@acme.com",
-                Password = passwordHasher.HashPassword(null!, "test"),
-                EmailConfirmedAtUtc = DateTime.UtcNow.ToInstant()
-            }
-        );
+        Send<Login.Command, Login.Response>(
+                new Login.Command
+                {
+                    Email = "does not exist",
+                    Password = ""
+                }
+            )
+            .ShouldThrow<NotFoundException>();
 
-        var response = await Send<Login.Command, Login.Response>(
-            new Login.Command
-            {
-                Email = "test@acme.com",
-                Password = "test"
-            }
-        );
-
-        response.AccessToken.ShouldNotBeNullOrEmpty();
-        response.ExpiresAtUtc.ShouldBeGreaterThan(0);
-        response.RefreshToken.ShouldNotBeNullOrEmpty();
+        return Task.CompletedTask;
     }
 }

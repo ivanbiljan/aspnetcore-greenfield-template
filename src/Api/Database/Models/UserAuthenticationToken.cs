@@ -13,15 +13,15 @@ public sealed class UserAuthenticationToken : EntityBase<int>
         DeleteAccount = 4
     }
 
-    public required int UserId { get; init; }
-
-    public User User { get; init; } = null!;
-
     public required TokenPurpose Purpose { get; init; }
 
-    public required Instant ValidUntilUtc { get; set; }
+    public required string Token { get; init; }
 
     public Instant? UsedOnUtc { get; set; }
 
-    public required string Token { get; init; }
+    public User User { get; init; } = null!;
+
+    public required int UserId { get; init; }
+
+    public required Instant ValidUntilUtc { get; set; }
 }

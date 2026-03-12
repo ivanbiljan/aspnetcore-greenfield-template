@@ -4,6 +4,14 @@ namespace Api.Infrastructure.Hangfire.Filters;
 
 internal sealed class AuditLogJobContextEnricher : IServerFilter
 {
+    public void OnPerformed(PerformedContext context)
+    {
+        if (context.Items.TryGetValue("AuditContext", out var obj) && obj is AuditContext auditContext)
+        {
+            auditContext.Dispose();
+        }
+    }
+
     public void OnPerforming(PerformingContext context)
     {
         var auditContext = new AuditContext(
@@ -16,13 +24,5 @@ internal sealed class AuditLogJobContextEnricher : IServerFilter
         };
 
         context.Items["AuditContext"] = auditContext;
-    }
-
-    public void OnPerformed(PerformedContext context)
-    {
-        if (context.Items.TryGetValue("AuditContext", out var obj) && obj is AuditContext auditContext)
-        {
-            auditContext.Dispose();
-        }
     }
 }

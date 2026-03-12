@@ -14,8 +14,8 @@ namespace Api.Infrastructure.Hangfire.Filters;
 internal sealed class DisableConcurrentExecutionAttribute : JobFilterAttribute, IServerFilter
 {
     private const string MetadataKey = "Metadata";
-    private static readonly TimeSpan LockTimeout = TimeSpan.FromSeconds(10);
     private static readonly TimeSpan FingerprintTimeout = TimeSpan.FromHours(1);
+    private static readonly TimeSpan LockTimeout = TimeSpan.FromSeconds(10);
 
     public void OnPerformed(PerformedContext context)
     {
@@ -30,22 +30,6 @@ internal sealed class DisableConcurrentExecutionAttribute : JobFilterAttribute, 
         }
 
         context.Canceled = true;
-    }
-
-    private static void RemoveFingerprint(IStorageConnection connection, Job job)
-    {
-        RemoveFingerprint(connection, GetFingerprintKey(job));
-    }
-
-    private static void RemoveFingerprint(IStorageConnection connection, string key)
-    {
-        var lockFingerprint = GetFingerprintLockKey(key);
-        using (connection.AcquireDistributedLock(lockFingerprint, LockTimeout))
-        {
-            using var transaction = connection.CreateWriteTransaction();
-            transaction.RemoveHash(key);
-            transaction.Commit();
-        }
     }
 
     private static string GetFingerprint(Job job)
@@ -87,6 +71,22 @@ internal sealed class DisableConcurrentExecutionAttribute : JobFilterAttribute, 
         var calculatedSignature = Convert.ToHexString(hash).ToUpperInvariant();
 
         return calculatedSignature;
+    }
+
+    private static void RemoveFingerprint(IStorageConnection connection, Job job)
+    {
+        RemoveFingerprint(connection, GetFingerprintKey(job));
+    }
+
+    private static void RemoveFingerprint(IStorageConnection connection, string key)
+    {
+        var lockFingerprint = GetFingerprintLockKey(key);
+        using (connection.AcquireDistributedLock(lockFingerprint, LockTimeout))
+        {
+            using var transaction = connection.CreateWriteTransaction();
+            transaction.RemoveHash(key);
+            transaction.Commit();
+        }
     }
 
     private static bool TryAddFingerprintIfNotExists(IStorageConnection connection, Job job)

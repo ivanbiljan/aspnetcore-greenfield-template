@@ -8,7 +8,6 @@ namespace SourceGenerators.ConfigureOptions;
 [Generator]
 public class Generator : IIncrementalGenerator
 {
-    private const string Namespace = "SourceGenerators";
     private const string AttributeName = "ConfigureOptionsAttribute";
 
     private const string ConfigureOptionsAttributeSource = $$"""
@@ -22,6 +21,8 @@ public class Generator : IIncrementalGenerator
                                                                 public string SectionName { get; } = sectionName;
                                                              }
                                                              """;
+
+    private const string Namespace = "SourceGenerators";
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {

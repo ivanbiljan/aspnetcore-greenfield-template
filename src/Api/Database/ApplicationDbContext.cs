@@ -6,9 +6,9 @@ namespace Api.Database;
 
 public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
-    public DbSet<User> Users => Set<User>();
-
     public DbSet<UserAuthenticationToken> UserAuthenticationTokens => Set<UserAuthenticationToken>();
+
+    public DbSet<User> Users => Set<User>();
 
     /// <inheritdoc />
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
