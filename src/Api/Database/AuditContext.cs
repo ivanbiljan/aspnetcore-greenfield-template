@@ -101,7 +101,6 @@ public sealed class AuditContextScope : IDisposable
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
-        ArgumentNullException.ThrowIfNull(value);
 
         _properties[key] = value;
     }
