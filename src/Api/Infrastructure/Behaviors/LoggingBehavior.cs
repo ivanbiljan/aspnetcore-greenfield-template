@@ -19,7 +19,11 @@ public sealed class LoggingBehavior<TRequest, TResponse>(
     private readonly ILogger<LoggingBehavior<TRequest, TResponse>> _logger = logger;
 
     /// <inheritdoc />
-    [SuppressMessage("Performance", "CA1873:Avoid potentially expensive logging")]
+    [SuppressMessage(
+        "Performance", 
+        "CA1873:Avoid potentially expensive logging", 
+        Justification = "Source generated ILogger methods bypass Serilog's destructuring pipeline. This results in sensitive information being leaked")
+    ]
     public override async ValueTask<TResponse> HandleAsync(TRequest request, CancellationToken cancellationToken)
     {
         var logContext = new Dictionary<string, object?>
