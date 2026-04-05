@@ -19,6 +19,7 @@ public sealed class LoggingBehavior<TRequest, TResponse>(
     private readonly ILogger<LoggingBehavior<TRequest, TResponse>> _logger = logger;
 
     /// <inheritdoc />
+    [SuppressMessage("Performance", "CA1873:Avoid potentially expensive logging")]
     public override async ValueTask<TResponse> HandleAsync(TRequest request, CancellationToken cancellationToken)
     {
         var logContext = new Dictionary<string, object?>

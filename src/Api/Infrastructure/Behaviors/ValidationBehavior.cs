@@ -18,6 +18,7 @@ public sealed class ValidationBehavior<TRequest, TResponse>(
     private readonly IEnumerable<IValidator<TRequest>> _validators = validators;
 
     /// <inheritdoc />
+    [SuppressMessage("Performance", "CA1873:Avoid potentially expensive logging")]
     public override async ValueTask<TResponse> HandleAsync(
         TRequest request,
         CancellationToken cancellationToken

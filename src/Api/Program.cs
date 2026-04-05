@@ -52,7 +52,6 @@ try
     builder.Services.AddProblemDetailsConventions();
 
     builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwagger();
 
     builder.AddEntityFramework();
     builder.AddHangfireInternal();

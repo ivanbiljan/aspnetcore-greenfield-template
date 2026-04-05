@@ -14,13 +14,12 @@ namespace Api.Tests.Infrastructure;
 
 public sealed class CustomApplicationFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
-    private readonly PostgreSqlContainer _postgreSqlContainer = new PostgreSqlBuilder()
-        .WithImage(PostgreSqlBuilder.PostgreSqlImage)
+    private readonly PostgreSqlContainer _postgreSqlContainer = new PostgreSqlBuilder("postgres:16")
         .WithDatabase(PostgreSqlBuilder.DefaultDatabase)
         .WithUsername(PostgreSqlBuilder.DefaultUsername)
         .WithPassword(PostgreSqlBuilder.DefaultPassword)
         .Build();
-
+    
     private NpgsqlConnection _npgsqlConnection = null!;
     private Respawner _respawner = null!;
 

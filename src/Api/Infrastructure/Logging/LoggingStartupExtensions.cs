@@ -9,7 +9,6 @@ using Serilog.Events;
 using Serilog.Exceptions;
 using Serilog.Exceptions.Core;
 using Serilog.Exceptions.EntityFrameworkCore.Destructurers;
-using Serilog.Exceptions.Refit.Destructurers;
 using Serilog.Sinks.SystemConsole.Themes;
 
 namespace Api.Infrastructure.Logging;
@@ -105,7 +104,7 @@ internal static class LoggingStartupExtensions
                 loggerConfiguration.Enrich.With<HangfireJobIdEnricher>();
                 loggerConfiguration.Enrich.WithExceptionDetails(
                     new DestructuringOptionsBuilder().WithDestructurers(
-                        [new ApiExceptionDestructurer(), new DbUpdateExceptionDestructurer()]
+                        [new DbUpdateExceptionDestructurer()]
                     )
                 );
 
